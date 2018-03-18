@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,10 +9,10 @@ using System.Web;
 
 namespace SpotifyNet
 {
-    internal class WebAuthorization
+    internal class WebAuthorization : IDisposable
     {
-        const string api_base_url = "https://api.spotify.com/v1";
-        const string accounts_base_url = "https://accounts.spotify.com";
+        public const string accounts_base_url = "https://accounts.spotify.com";
+
         private static readonly HttpClient httpClient;
 
         static WebAuthorization()
@@ -21,35 +20,24 @@ namespace SpotifyNet
             httpClient = new HttpClient();
         }
 
-        //private string redirectUri;
-        //private string clientId;
-        //private Scope scope;
-        //private string response_type = "token";
-        //private string access_token;
-
-
-
-        //// Erster Aufruf: /authorize -> client_id, scope, redirect_uri => authorization_code
-        //// Zweiter Aufruf: /api/token -> authorization_code, client_secret => access_token, refresh_token
-        //// Dritter Aufruf: /api/token -> refresh_token => access_token
-
-
         /// <summary>
-        /// Erster Aufruf
+        /// 1. GetAuthorizationCode
         /// </summary>
         /// <param name="client_id">Client ID</param>
         /// <param name="redirect_uri">Redirect URL</param>
-        /// <param name="state">csrftoken -> Some string to prevent users from Cross-Site-Request-Forgery(CSRF/XSRF)</param>
         /// <param name="scope"></param>
         /// <param name="show_dialog"></param>
         /// <returns>authorization_code</returns>
-        public string GetAuthorizationCode(string client_id, string redirect_uri, string state, Scope scope, bool show_dialog = false)
+        public string GetAuthorizationCode(string client_id, string redirect_uri, Scope scope, bool show_dialog = false)
         {
+            // Some string to prevent users from Cross-Site-Request-Forgery(CSRF/XSRF)
+            string csrftoken = Guid.NewGuid().ToString();
+
             var uri = new Uri($"{accounts_base_url}/authorize")
                 .AddParameter("client_id", client_id)
                 .AddParameter("response_type", "code")
                 .AddParameter("redirect_uri", redirect_uri.TrimEnd('/'))
-                .AddParameter("state", state)
+                .AddParameter("state", csrftoken)
                 .AddParameter("scope", string.Join(" ", scope.GetDescriptions()).Trim())
                 .AddParameter("show_dialog", show_dialog.ToString().ToLower());
 
@@ -61,100 +49,100 @@ namespace SpotifyNet
 
             var values = HttpUtility.ParseQueryString(result.Query);
 
-            if (values["state"] != state)
-                throw new Exception($"retrieved state: '{values[state]}' is not '{state}'");
+            if (values["state"] != csrftoken)
+                throw new Exception($"retrieved state: '{values[csrftoken]}' is not '{csrftoken}'");
 
             return values["code"];
         }
 
         /// <summary>
-        /// Zweiter Aufruf
+        /// 2. GetAccessToken
         /// </summary>
-        /// <param name="authorization_code"></param>
-        /// <param name="client_secret"></param>
-        /// <returns>access_token, refresh_token</returns>
-        public (string access_token, string refresh_token) ZweiterAufruf(string authorization_code, string client_secret)
+        /// <param name="authorization_code">Authorization Code from <see cref="GetAuthorizationCode"/></param>
+        /// <param name="redirect_uri">The same Redirect URI which was used in <see cref="GetAuthorizationCode"/></param>
+        /// <param name="client_id">Client ID</param>
+        /// <param name="client_secret">Client Secret</param>
+        /// <returns><see cref="AccessToken"/></returns>
+
+        public async Task<AccessToken> GetAccessTokenAsync(string authorization_code, string redirect_uri, string client_id, string client_secret)
         {
             var url = $"{accounts_base_url}/api/token";
-            return (null, null);
+
+            var content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("grant_type", "authorization_code"),
+                new KeyValuePair<string, string>("code", authorization_code),
+                new KeyValuePair<string, string>("redirect_uri", redirect_uri.Trim('/'))
+            });
+
+            string responseMessage = "";
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("Authorization", GetAuthorizationHeader(client_id, client_secret));
+                var response = await client.PostAsync(url, content);
+
+                if (response.IsSuccessStatusCode)
+                    responseMessage = await response.Content.ReadAsStringAsync();
+            }
+
+            var result = JsonConvert.DeserializeObject<AccessToken>(responseMessage);
+            CalculateExpiration(ref result);
+
+            return result;
         }
 
         /// <summary>
-        /// Dritter Aufruf
+        /// 3. RefreshAccessToken
         /// </summary>
-        /// <param name="refresh_token"></param>
-        /// <returns>access_token</returns>
-        public string DritterAufruf(string refresh_token)
+        /// <param name="accessToken">Access Token</param>
+        /// <param name="client_id">Client ID</param>
+        /// <param name="client_secret">Client Secret</param>
+        /// <returns><see cref="AccessToken"/></returns>
+        public async Task<AccessToken> RefreshAccessTokenAsync(AccessToken accessToken, string client_id, string client_secret)
         {
             var url = $"{accounts_base_url}/api/token";
-            return null;
+
+            var content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("grant_type", "refresh_token"),
+                new KeyValuePair<string, string>("refresh_token", accessToken.refresh_token),
+            });
+
+            string responseMessage = "";
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("Authorization", GetAuthorizationHeader(client_id, client_secret));
+                var response = await client.PostAsync(url, content);
+
+                if (response.IsSuccessStatusCode)
+                    responseMessage = await response.Content.ReadAsStringAsync();
+            }
+
+            var result = JsonConvert.DeserializeObject<AccessToken>(responseMessage);
+            accessToken.access_token = result.access_token;
+            accessToken.token_type = result.token_type;
+            accessToken.scope = result.scope;
+            accessToken.expires_in = result.expires_in;
+
+            CalculateExpiration(ref accessToken);
+
+            return accessToken;
         }
 
+        private void CalculateExpiration(ref AccessToken accessToken)
+        {
+            accessToken.expires_at = DateTime.Now.AddSeconds(accessToken.expires_in);
+        }
 
+        private string GetAuthorizationHeader(string client_id, string client_secret)
+        {
+            return "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes($"{client_id}:{client_secret}"));
+        }
 
-        // access_token = token.create_new_token(user.id, type='loadSpotify', data=0)
-        // url = SpotifyClient().authorization(client_id, redirect_url, scope=scope, state=access_token)
-
-
-        //public WebAuthorization(string redirectUri, string clientId, Scope scope)
-        //{
-        //    this.redirectUri = redirectUri;
-        //    this.clientId = clientId;
-        //    this.scope = scope;
-        //}
-
-        //internal async void GetAccessToken()
-        //{
-        //    Webserver webserver = new Webserver(redirectUri);
-        //    webserver.StartListen();
-
-        //    var a = await authorization_code();
-        //    var aa = 1;
-
-        //}
-
-        //private string BuildAuthorizeUri()
-        //{
-        //    var uri = $"https://accounts.spotify.com/authorize?client_id={this.clientId}&response_type={this.response_type}&redirect_uri={this.redirectUri.TrimEnd('/')}&state=XSS";
-
-        //    if (scope != 0)
-        //        uri += "&scope=" + string.Join(" ", scope.GetDescriptions()).Trim();
-
-        //    if (!string.IsNullOrEmpty(access_token))
-        //        uri += "&state=" + access_token;
-
-        //    uri += "&show_dialog=false";
-
-        //    return uri;
-        //}
-
-        //private async Task<HttpResponseMessage> authorization_code()
-        //{
-        //    HttpResponseMessage result = null;
-
-        //    var content = new FormUrlEncodedContent(new[]
-        //    {
-        //        //new KeyValuePair<string, string>("grant_type", grant_type),
-        //        new KeyValuePair<string, string>("redirect_uri", redirectUri),
-        //        //new KeyValuePair<string, string>("code", code),
-        //    });
-
-        //    //using (var client = new HttpClient())
-        //    //{
-
-        //    //    result = await client.PostAsync("https://accounts.spotify.com/api/token", content);
-        //    //}
-
-
-        //    //using (var client = new HttpClient())
-        //    //{
-
-        //    //    result = await client.PostAsync(BuildAuthorizeUri(), content);
-        //    //}
-
-        //    Process.Start(BuildAuthorizeUri());
-
-        //    return result;
-        //}
+        public void Dispose()
+        {
+            httpClient?.CancelPendingRequests();
+            httpClient?.Dispose();
+        }
     }
 }
