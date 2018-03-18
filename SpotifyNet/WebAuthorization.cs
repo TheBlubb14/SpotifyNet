@@ -76,14 +76,11 @@ namespace SpotifyNet
             });
 
             string responseMessage = "";
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Add("Authorization", GetAuthorizationHeader(client_id, client_secret));
-                var response = await client.PostAsync(url, content);
+            httpClient.DefaultRequestHeaders.Add("Authorization", GetAuthorizationHeader(client_id, client_secret));
+            var response = await httpClient.PostAsync(url, content).ConfigureAwait(false);
 
-                if (response.IsSuccessStatusCode)
-                    responseMessage = await response.Content.ReadAsStringAsync();
-            }
+            if (response.IsSuccessStatusCode)
+                responseMessage = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             var result = JsonConvert.DeserializeObject<AccessToken>(responseMessage);
             CalculateExpiration(ref result);
@@ -112,10 +109,10 @@ namespace SpotifyNet
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("Authorization", GetAuthorizationHeader(client_id, client_secret));
-                var response = await client.PostAsync(url, content);
+                var response = await client.PostAsync(url, content).ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)
-                    responseMessage = await response.Content.ReadAsStringAsync();
+                    responseMessage = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             }
 
             var result = JsonConvert.DeserializeObject<AccessToken>(responseMessage);

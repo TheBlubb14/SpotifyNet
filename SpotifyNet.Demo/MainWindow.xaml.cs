@@ -22,7 +22,7 @@ namespace SpotifyNet.Demo
     /// </summary>
     public partial class MainWindow : Window
     {
-        Spotify spotifyNet = new Spotify();
+        Spotify spotifyNet;
         SpotifySecrets spotifySecrets;
 
         public MainWindow()
@@ -33,7 +33,10 @@ namespace SpotifyNet.Demo
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             spotifySecrets = JsonConvert.DeserializeObject<SpotifySecrets>(File.ReadAllText(@"..\..\..\spotify.secret"));
-            spotifyNet.Authorize(spotifySecrets.ClientID, spotifySecrets.ClientSecret);
+            spotifyNet = new Spotify(spotifySecrets.ClientID, spotifySecrets.ClientSecret);
+            var d = 1;
+            spotifyNet.test();
+            var ddd = 1;
         }
     }
 }
