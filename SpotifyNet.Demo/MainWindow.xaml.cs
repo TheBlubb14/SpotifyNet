@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SpotifyNet.Model.PlaylistData;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,13 +31,26 @@ namespace SpotifyNet.Demo
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private List<PlaylistItem> PlaylistItems = new List<PlaylistItem>();
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             spotifySecrets = JsonConvert.DeserializeObject<SpotifySecrets>(File.ReadAllText(@"..\..\..\spotify.secret"));
             spotifyNet = new Spotify(spotifySecrets.ClientID, spotifySecrets.ClientSecret);
-            var d = 1;
-            spotifyNet.test();
-            var ddd = 1;
+
+            var playlist = await spotifyNet.GetPlaylists();
+            PlaylistItems.AddRange(playlist.Items);
+
+            do
+            {
+                playlist = await spotifyNet.GetNextPageAsync<Playlist, PlaylistItem>(playlist);
+                PlaylistItems.AddRange(playlist.Items);
+            }
+            while (playlist.HasNextPage);
+
+            ListBoxPlaylist.ItemsSource = PlaylistItems;
+            ListBoxPlaylist.DisplayMemberPath = nameof(PlaylistItem.Name);
+            //var res = await spotifyNet.GetMeAsync();
         }
     }
 }

@@ -1,10 +1,16 @@
 ﻿using Newtonsoft.Json;
+using SpotifyNet.Model;
+using SpotifyNet.Model.BasicData;
+using SpotifyNet.Model.PlaylistData;
+using SpotifyNet.Model.UserData;
 using System;
 using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace SpotifyNet
 {
-    public sealed class Spotify
+    public sealed class Spotify : IDisposable
     {
         public const string api_base_url = "https://api.spotify.com/v1";
         public const string RedirectUri = "http://localhost:8000/";
@@ -40,11 +46,18 @@ namespace SpotifyNet
             }
         }
 
+        private static readonly HttpClient httpClient;
+
         private WebAuthorization webAuthorization;
         private AccessToken accessToken;
         private string path;
         private string clientID;
         private string clientSecret;
+
+        static Spotify()
+        {
+            httpClient = new HttpClient();
+        }
 
         public Spotify(string client_id, string client_secret)
         {
@@ -56,8 +69,6 @@ namespace SpotifyNet
             Directory.CreateDirectory(path);
             path = Path.Combine(path, "access_token.json");
         }
-
-
 
         private void SaveAccessToken(AccessToken accessToken)
         {
@@ -72,9 +83,71 @@ namespace SpotifyNet
             return JsonConvert.DeserializeObject<AccessToken>(File.ReadAllText(path));
         }
 
-        public void test()
+        private void SetAuthorizationHeader(HttpClient httpClient)
         {
-            var a = AccessToken;
+            httpClient.DefaultRequestHeaders.Clear();
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {this.AccessToken.access_token}");
+        }
+
+        private async Task<T> DownloadDataAsync<T>(string url)
+            => await DownloadDataAsync<T>(new Uri(url));
+
+        private async Task<T> DownloadDataAsync<T>(Uri uri)
+        {
+            SetAuthorizationHeader(httpClient);
+
+            var response = await httpClient.GetAsync(uri).ConfigureAwait(false);
+            var responseMessage = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<T>(responseMessage);
+        }
+
+        public async Task<T> GetNextPageAsync<T, TItem>(T pageing) where T : Pageing<TItem> where TItem : IPageingItem
+        {
+            if (!pageing.HasNextPage)
+                return default;
+
+            return await DownloadDataAsync<T>(pageing.Next);
+        }
+
+        public async Task<T> GetPreviousPage<T>(T pageing) where T : Pageing<IPageingItem>
+        {
+            if (!pageing.HasPreviousPage)
+                return default;
+
+            return await DownloadDataAsync<T>(pageing.Next);
+        }
+
+        /// <summary>
+        /// Get Current User's Profile 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<User> GetMeAsync()
+        {
+            var url = $"{ api_base_url}/me";
+
+            return await DownloadDataAsync<User>(url);
+        }
+
+        /// <summary>
+        /// Get a List of Current User's Playlists
+        /// </summary>
+        /// <param name="limit">The maximum number of playlists to return. Minimum: 1. Maximum: 50.</param>
+        /// <param name="offset">The index of the first playlist to return. Maximum offset: 100.000. </param>
+        /// <returns></returns>
+        public async Task<Playlist> GetPlaylists(int limit = 20, int offset = 0)
+        {
+            var uri = new Uri($"{api_base_url}/me/playlists")
+                .AddParameter("limit", limit.Clamp(1, 50))
+                .AddParameter("offset", offset.Clamp(0, 100_000));
+
+            return await DownloadDataAsync<Playlist>(uri);
+        }
+
+
+        public void Dispose()
+        {
+            httpClient?.CancelPendingRequests();
+            httpClient?.Dispose();
         }
     }
 }

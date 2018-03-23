@@ -9,7 +9,7 @@ using System.Web;
 
 namespace SpotifyNet
 {
-    internal class WebAuthorization : IDisposable
+    internal class WebAuthorization
     {
         public const string accounts_base_url = "https://accounts.spotify.com";
 
@@ -76,7 +76,8 @@ namespace SpotifyNet
             });
 
             string responseMessage = "";
-            httpClient.DefaultRequestHeaders.Add("Authorization", GetAuthorizationHeader(client_id, client_secret));
+
+            SetAuthorizationHeader(httpClient, client_id, client_secret);
             var response = await httpClient.PostAsync(url, content).ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
@@ -106,14 +107,12 @@ namespace SpotifyNet
             });
 
             string responseMessage = "";
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Add("Authorization", GetAuthorizationHeader(client_id, client_secret));
-                var response = await client.PostAsync(url, content).ConfigureAwait(false);
 
-                if (response.IsSuccessStatusCode)
-                    responseMessage = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            }
+            SetAuthorizationHeader(httpClient, client_id, client_secret);
+            var response = await httpClient.PostAsync(url, content).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+                responseMessage = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             var result = JsonConvert.DeserializeObject<AccessToken>(responseMessage);
             accessToken.access_token = result.access_token;
@@ -131,15 +130,11 @@ namespace SpotifyNet
             accessToken.expires_at = DateTime.Now.AddSeconds(accessToken.expires_in);
         }
 
-        private string GetAuthorizationHeader(string client_id, string client_secret)
-        {
-            return "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes($"{client_id}:{client_secret}"));
-        }
 
-        public void Dispose()
+        private void SetAuthorizationHeader(HttpClient httpClient, string client_id, string client_secret)
         {
-            httpClient?.CancelPendingRequests();
-            httpClient?.Dispose();
+            httpClient.DefaultRequestHeaders.Clear();
+            httpClient.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes($"{client_id}:{client_secret}")));
         }
     }
 }

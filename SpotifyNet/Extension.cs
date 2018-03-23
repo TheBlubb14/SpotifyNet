@@ -8,14 +8,21 @@ using System.Web;
 
 namespace SpotifyNet
 {
-    public static class Extension
+    internal static class Extension
     {
-        public static Uri AddParameter(this Uri uri, string key, string value)
+        public static T Clamp<T>(this T val, T min, T max) where T : IComparable<T>
+        {
+            if (val.CompareTo(min) < 0) return min;
+            else if (val.CompareTo(max) > 0) return max;
+            else return val;
+        }
+
+        public static Uri AddParameter(this Uri uri, string key, object value)
         {
             var builder = new UriBuilder(uri);
             var query = HttpUtility.ParseQueryString(builder.Query);
 
-            query.Add(key, value);
+            query.Add(key, value.ToString());
             builder.Query = query.ToString();
             uri = builder.Uri;
 
@@ -41,7 +48,7 @@ namespace SpotifyNet
                 .FirstOrDefault();
 
             if (attribute == null)
-                return default(Expected);
+                return default;
 
             return expression(attribute);
         }
