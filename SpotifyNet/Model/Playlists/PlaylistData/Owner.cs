@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SpotifyNet.Model.BasicData;
 
-namespace SpotifyNet.Model.PlaylistData
+namespace SpotifyNet.Model.Playlists.PlaylistData
 {
     public class Owner
     {

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace SpotifyNet.Model.UserData
+namespace SpotifyNet.Model.UsersProfile.UserData
 {
     public class Followers
     {

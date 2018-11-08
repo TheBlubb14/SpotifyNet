@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SpotifyNet.Model.PlaylistData
+namespace SpotifyNet.Model.Playlists.PlaylistData
 {
     public interface IPlaylistItem : IPageingItem
     {

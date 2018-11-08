@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
 using SpotifyNet.Model;
 using SpotifyNet.Model.BasicData;
-using SpotifyNet.Model.PlaylistData;
-using SpotifyNet.Model.UserData;
+using SpotifyNet.Model.Player.DeviceData;
+using SpotifyNet.Model.Playlists.PlaylistData;
+using SpotifyNet.Model.UsersProfile.UserData;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -143,6 +144,17 @@ namespace SpotifyNet
             return await DownloadDataAsync<Playlist>(uri);
         }
 
+        /// <summary>
+        /// Get information about a user’s available devices.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Devices> GetDevices()
+        {
+            var url = $"{api_base_url}/me/player/devices";
+
+            return await DownloadDataAsync<Devices>(url);
+        }
+
 
         public void Dispose()
         {
@@ -150,4 +162,6 @@ namespace SpotifyNet
             httpClient?.Dispose();
         }
     }
+
+
 }

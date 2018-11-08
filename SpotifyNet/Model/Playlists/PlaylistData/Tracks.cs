@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace SpotifyNet.Model.PlaylistData
+namespace SpotifyNet.Model.Playlists.PlaylistData
 {
     public class Tracks
     {

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SpotifyNet.Model.BasicData;
 
-namespace SpotifyNet.Model.UserData
+namespace SpotifyNet.Model.UsersProfile.UserData
 {
     public class User : BaseModel
     {
