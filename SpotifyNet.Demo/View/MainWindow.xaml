@@ -27,26 +27,26 @@
             <Custom:EventToCommand Command="{Binding LoadedCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <GroupBox Grid.Column="0" Header="Playlists" x:Name="GroupBoxPlaylists">
-            <GroupItem>
-                <ListBox ItemsSource="{Binding Playlists}"
-                         Width="{Binding ElementName=GroupBoxPlaylists, Path=ActualWidth}"
-                         Height="{Binding ElementName=GroupBoxPlaylists, Path=ActualHeight}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type spotifyPlaylistData:PlaylistItem}">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Name}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </GroupItem>
-        </GroupBox>
+        <ListBox Grid.Column="0" ItemsSource="{Binding Playlists}">
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type spotifyPlaylistData:PlaylistItem}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <StackPanel Grid.Column="1">
+            <TextBlock Text="Current Track:"/>
+            <TextBlock Text="{Binding CurrentSong}"/>
+            <TextBlock Text="from:"/>
+            <TextBlock Text="{Binding CurrentArtist}"/>
+        </StackPanel>
     </Grid>
 </Window>

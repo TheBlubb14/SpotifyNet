@@ -27,7 +27,7 @@ namespace SpotifyNet.Model.Playlists.PlaylistData
         public Owner Owner { get; set; }
 
         [JsonProperty("public")]
-        public bool @Public { get; set; }
+        public bool Public { get; set; }
 
         [JsonProperty("snapshot_id")]
         public string SnapshotId { get; set; }

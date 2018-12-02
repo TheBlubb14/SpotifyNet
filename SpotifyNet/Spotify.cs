@@ -1,13 +1,13 @@
-﻿using Newtonsoft.Json;
-using SpotifyNet.Model;
-using SpotifyNet.Model.BasicData;
-using SpotifyNet.Model.Player.DeviceData;
-using SpotifyNet.Model.Playlists.PlaylistData;
-using SpotifyNet.Model.UsersProfile.UserData;
-using System;
+﻿using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using SpotifyNet.Model.BasicData;
+using SpotifyNet.Model.Player;
+using SpotifyNet.Model.Player.DeviceData;
+using SpotifyNet.Model.Playlists.PlaylistData;
+using SpotifyNet.Model.UsersProfile.UserData;
 
 namespace SpotifyNet
 {
@@ -87,11 +87,13 @@ namespace SpotifyNet
         private void SetAuthorizationHeader(HttpClient httpClient)
         {
             httpClient.DefaultRequestHeaders.Clear();
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {this.AccessToken.access_token}");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {AccessToken.access_token}");
         }
 
         private async Task<T> DownloadDataAsync<T>(string url)
-            => await DownloadDataAsync<T>(new Uri(url));
+        {
+            return await DownloadDataAsync<T>(new Uri(url));
+        }
 
         private async Task<T> DownloadDataAsync<T>(Uri uri)
         {
@@ -135,7 +137,7 @@ namespace SpotifyNet
         /// <param name="limit">The maximum number of playlists to return. Minimum: 1. Maximum: 50.</param>
         /// <param name="offset">The index of the first playlist to return. Maximum offset: 100.000. </param>
         /// <returns></returns>
-        public async Task<Playlist> GetPlaylists(int limit = 20, int offset = 0)
+        public async Task<Playlist> GetPlaylistsAsync(int limit = 20, int offset = 0)
         {
             var uri = new Uri($"{api_base_url}/me/playlists")
                 .AddParameter("limit", limit.Clamp(1, 50))
@@ -148,13 +150,30 @@ namespace SpotifyNet
         /// Get information about a user’s available devices.
         /// </summary>
         /// <returns></returns>
-        public async Task<Devices> GetDevices()
+        public async Task<Devices> GetDevicesAsync()
         {
             var url = $"{api_base_url}/me/player/devices";
 
             return await DownloadDataAsync<Devices>(url);
         }
 
+        #region Player
+
+        /// <summary>
+        /// Get information about the user’s current playback state, including track, track progress, and active device.
+        /// </summary>
+        /// <param name="market">An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+        /// <returns></returns>
+        public async Task<CurrentPlaybackInfo> GetCurrentPlaybackInfoAsync(string market = "")
+        {
+            var uri = new Uri($"{api_base_url}/me/player");
+
+            if (!string.IsNullOrEmpty(market))
+                uri = uri.AddParameter("market", market);
+
+            return await DownloadDataAsync<CurrentPlaybackInfo>(uri);
+        }
+        #endregion
 
         public void Dispose()
         {
@@ -162,6 +181,4 @@ namespace SpotifyNet
             httpClient?.Dispose();
         }
     }
-
-
 }

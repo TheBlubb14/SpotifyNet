@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace SpotifyNet.Model.Playlists.PlaylistData
+namespace SpotifyNet.Model.BasicData
 {
     public class Image
     {

@@ -10,6 +10,9 @@ namespace SpotifyNet.Model.Player.DeviceData
         [JsonProperty("is_active")]
         public bool IsActive { get; set; }
 
+        [JsonProperty("is_private_session")]
+        public bool IsPrivateSession { get; set; }
+
         [JsonProperty("is_restricted")]
         public bool IsRestricted { get; set; }
 
