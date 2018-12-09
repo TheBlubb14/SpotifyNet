@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SpotifyNet</name>
+    </assembly>
+    <members>
+        <member name="P:SpotifyNet.Model.BasicData.Image.Height">
+            <summary>
+            The image height in pixels.
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.BasicData.Image.Url">
+            <summary>
+            The source URL of the image.
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.BasicData.Image.Width">
+            <summary>
+            The image width in pixels.
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.UsersProfile.UserData.Followers.Href">
+            <summary>
+            A link to the Web API endpoint providing full details of the followers.
+            Please note that this will always be set to null, as the Web API does not support it at the moment.
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.UsersProfile.UserData.Followers.Total">
+            <summary>
+            The total number of followers.
+            </summary>
+        </member>
+        <member name="M:SpotifyNet.Spotify.GetMeAsync">
+            <summary>
+            Get Current User's Profile 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SpotifyNet.Spotify.GetPlaylistsAsync(System.Int32,System.Int32)">
+            <summary>
+            Get a List of Current User's Playlists
+            </summary>
+            <param name="limit">The maximum number of playlists to return. Minimum: 1. Maximum: 50.</param>
+            <param name="offset">The index of the first playlist to return. Maximum offset: 100.000. </param>
+            <returns></returns>
+        </member>
+        <member name="M:SpotifyNet.Spotify.GetDevicesAsync">
+            <summary>
+            Get information about a user’s available devices.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SpotifyNet.Spotify.GetCurrentlyPlayingAsync(System.String)">
+            <summary>
+            Get the object currently being played on the user’s Spotify account.
+            </summary>
+            <param name="market">An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SpotifyNet.Spotify.GetCurrentPlaybackInfoAsync(System.String)">
+            <summary>
+            Get information about the user’s current playback state, including track, track progress, and active device.
+            </summary>
+            <param name="market">An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SpotifyNet.WebAuthorization.GetAuthorizationCode(System.String,System.String,SpotifyNet.Scope,System.Boolean)">
+            <summary>
+            1. GetAuthorizationCode
+            </summary>
+            <param name="client_id">Client ID</param>
+            <param name="redirect_uri">Redirect URL</param>
+            <param name="scope"></param>
+            <param name="show_dialog"></param>
+            <returns>authorization_code</returns>
+        </member>
+        <member name="M:SpotifyNet.WebAuthorization.GetAccessTokenAsync(System.String,System.String,System.String,System.String)">
+            <summary>
+            2. GetAccessToken
+            </summary>
+            <param name="authorization_code">Authorization Code from <see cref="M:SpotifyNet.WebAuthorization.GetAuthorizationCode(System.String,System.String,SpotifyNet.Scope,System.Boolean)"/></param>
+            <param name="redirect_uri">The same Redirect URI which was used in <see cref="M:SpotifyNet.WebAuthorization.GetAuthorizationCode(System.String,System.String,SpotifyNet.Scope,System.Boolean)"/></param>
+            <param name="client_id">Client ID</param>
+            <param name="client_secret">Client Secret</param>
+            <returns><see cref="T:SpotifyNet.AccessToken"/></returns>
+        </member>
+        <member name="M:SpotifyNet.WebAuthorization.RefreshAccessTokenAsync(SpotifyNet.AccessToken,System.String,System.String)">
+            <summary>
+            3. RefreshAccessToken
+            </summary>
+            <param name="accessToken">Access Token</param>
+            <param name="client_id">Client ID</param>
+            <param name="client_secret">Client Secret</param>
+            <returns><see cref="T:SpotifyNet.AccessToken"/></returns>
+        </member>
+    </members>
+</doc>

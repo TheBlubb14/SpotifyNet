@@ -28,14 +28,14 @@ namespace SpotifyNet
                     if (token == default(AccessToken))
                     {
                         var authorizationCode = webAuthorization.GetAuthorizationCode(clientID, RedirectUri, Scope.All);
-                        token = webAuthorization.GetAccessTokenAsync(authorizationCode, RedirectUri, clientID, clientSecret).Result;
+                        token = webAuthorization.GetAccessTokenAsync(authorizationCode, RedirectUri, clientID, clientSecret).GetAwaiter().GetResult();
                     }
 
                     AccessToken = token;
                 }
 
                 if (accessToken?.expires_at <= DateTime.Now)
-                    AccessToken = webAuthorization.RefreshAccessTokenAsync(accessToken, clientID, clientSecret).Result;
+                    AccessToken = webAuthorization.RefreshAccessTokenAsync(accessToken, clientID, clientSecret).GetAwaiter().GetResult();
 
                 return accessToken;
             }
@@ -158,6 +158,21 @@ namespace SpotifyNet
         }
 
         #region Player
+
+        /// <summary>
+        /// Get the object currently being played on the user’s Spotify account.
+        /// </summary>
+        /// <param name="market">An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+        /// <returns></returns>
+        public async Task<CurrentlyPlaying> GetCurrentlyPlayingAsync(string market = "")
+        {
+            var uri = new Uri($"{api_base_url}/me/player/currently-playing");
+
+            if (!string.IsNullOrEmpty(market))
+                uri = uri.AddParameter("market", market);
+
+            return await DownloadDataAsync<CurrentlyPlaying>(uri);
+        }
 
         /// <summary>
         /// Get information about the user’s current playback state, including track, track progress, and active device.

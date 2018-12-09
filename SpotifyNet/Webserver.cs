@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SpotifyNet
 {
@@ -22,6 +23,7 @@ namespace SpotifyNet
 
         public void Dispose()
         {
+            // TODO: wait for pending request from browser, otherwise brower will show error page
             _httpListener?.Stop();
             _httpListener = null;
         }
@@ -31,8 +33,8 @@ namespace SpotifyNet
             try
             {
                 var context = _httpListener.GetContext();
-                var response = context.Response;
-                response.AddHeader("Content-Type", "text/html");
+                
+                context.Response.AddHeader("Content-Type", "text/html");
                 var content = Encoding.UTF8.GetBytes(
                     "<html>" +
                     "<head>" +
@@ -42,8 +44,8 @@ namespace SpotifyNet
                         "<p> You can now close this window </p>" +
                     "</body>" +
                     "</html>");
-                response.OutputStream.Write(content, 0, content.Length);
-                response.OutputStream.Close();
+
+                context.Response.Close(content, true);
 
                 return context.Request.Url;
             }
@@ -54,7 +56,7 @@ namespace SpotifyNet
             }
         }
 
-        public async void StartListen()
+        public async Task StartListen()
         {
             try
             {

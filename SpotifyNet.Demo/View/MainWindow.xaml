@@ -47,6 +47,7 @@
             <TextBlock Text="{Binding CurrentSong}"/>
             <TextBlock Text="from:"/>
             <TextBlock Text="{Binding CurrentArtist}"/>
+            <Image Source="{Binding CurrentSongCover}"/>
         </StackPanel>
     </Grid>
 </Window>

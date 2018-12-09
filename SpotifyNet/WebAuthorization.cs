@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using Newtonsoft.Json;
 
 namespace SpotifyNet
 {
@@ -41,11 +41,13 @@ namespace SpotifyNet
                 .AddParameter("scope", string.Join(" ", scope.GetDescriptions()).Trim())
                 .AddParameter("show_dialog", show_dialog.ToString().ToLower());
 
-            Process.Start(uri.ToString());
             Uri result;
 
             using (var server = new Webserver(redirect_uri))
+            {
+                Process.Start(uri.ToString());
                 result = server.WaitListen();
+            }
 
             var values = HttpUtility.ParseQueryString(result.Query);
 
