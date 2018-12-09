@@ -60,15 +60,17 @@ namespace SpotifyNet
             httpClient = new HttpClient();
         }
 
+        public Spotify(SpotifySecrets spotifySecrets) => new Spotify(spotifySecrets.ClientID, spotifySecrets.ClientSecret);
+
         public Spotify(string client_id, string client_secret)
         {
-            clientID = client_id;
-            clientSecret = client_secret;
-            webAuthorization = new WebAuthorization();
+            this.clientID = client_id;
+            this.clientSecret = client_secret;
+            this.webAuthorization = new WebAuthorization();
 
-            path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpotifyNet");
+            this.path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpotifyNet");
             Directory.CreateDirectory(path);
-            path = Path.Combine(path, "access_token.json");
+            this.path = Path.Combine(path, "access_token.json");
         }
 
         private void SaveAccessToken(AccessToken accessToken)
