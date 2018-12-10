@@ -60,7 +60,10 @@ namespace SpotifyNet
             httpClient = new HttpClient();
         }
 
-        public Spotify(SpotifySecrets spotifySecrets) => new Spotify(spotifySecrets.ClientID, spotifySecrets.ClientSecret);
+        public Spotify(SpotifySecrets spotifySecrets) : this(spotifySecrets.ClientID, spotifySecrets.ClientSecret)
+        {
+
+        }
 
         public Spotify(string client_id, string client_secret)
         {
