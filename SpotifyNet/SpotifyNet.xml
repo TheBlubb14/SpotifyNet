@@ -19,6 +19,33 @@
             The image width in pixels.
             </summary>
         </member>
+        <member name="T:SpotifyNet.Model.Player.Offset">
+            <summary>
+            Indicates from where in the context playback should start.
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.Offset.Position">
+            <summary>
+            The zero based position for the track in the playlist or album.
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.Offset.Uri">
+            <summary>
+            Representing the track uri.
+            </summary>
+        </member>
+        <member name="M:SpotifyNet.Model.Player.Offset.#ctor(System.UInt32)">
+            <summary>
+            Indicates from where in the context playback should start.
+            </summary>
+            <param name="position">Representing the uri of the item to start at.</param>
+        </member>
+        <member name="M:SpotifyNet.Model.Player.Offset.#ctor(System.String)">
+            <summary>
+            Indicates from where in the context playback should start.
+            </summary>
+            <param name="uri">The zero based position for the track in the playlist or album.</param>
+        </member>
         <member name="P:SpotifyNet.Model.UsersProfile.UserData.Followers.Href">
             <summary>
             A link to the Web API endpoint providing full details of the followers.
@@ -63,6 +90,117 @@
             </summary>
             <param name="market">An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
             <returns></returns>
+        </member>
+        <member name="M:SpotifyNet.Spotify.PausePlayback(System.String)">
+            <summary>
+            Pause playback on the user’s account.
+            </summary>
+            <param name="device_id">The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+            <returns>
+            A completed request will return a <see cref="F:System.Net.HttpStatusCode.NoContent"/> response code, and then issue the command to the player.
+            Due to the asynchronous nature of the issuance of the command, you should use the <see href="https://developer.spotify.com/documentation/web-api/reference/player/get-information-about-the-users-current-playback">Get Information About The User’s Current Playback</see> endpoint to check that your issued command was handled correctly by the player.
+            If the device is not found, the request will return <see cref="F:System.Net.HttpStatusCode.NotFound"/> response code.
+            If the user making the request is non-premium, a <see cref="F:System.Net.HttpStatusCode.Forbidden"/> response code will be returned.
+            </returns>
+        </member>
+        <member name="M:SpotifyNet.Spotify.SkipPlaybackToPrevious(System.String)">
+            <summary>
+            Skips to previous track in the user’s queue.
+            </summary>
+            <param name="device_id">The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+            <returns>
+            A completed request will return a <see cref="F:System.Net.HttpStatusCode.NoContent"/> response code, and then issue the command to the player.
+            Due to the asynchronous nature of the issuance of the command, you should use the <see href="https://developer.spotify.com/documentation/web-api/reference/player/get-information-about-the-users-current-playback">Get Information About The User’s Current Playback</see> endpoint to check that your issued command was handled correctly by the player.
+            If the device is not found, the request will return <see cref="F:System.Net.HttpStatusCode.NotFound"/> response code.
+            If the user making the request is non-premium, a <see cref="F:System.Net.HttpStatusCode.Forbidden"/> response code will be returned.
+            </returns>
+        </member>
+        <member name="M:SpotifyNet.Spotify.SkipPlaybackToNext(System.String)">
+            <summary>
+            Skips to next track in the user’s queue.
+            </summary>
+            <param name="device_id">The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+            <returns>
+            A completed request will return a <see cref="F:System.Net.HttpStatusCode.NoContent"/> response code, and then issue the command to the player.
+            Due to the asynchronous nature of the issuance of the command, you should use the <see href="https://developer.spotify.com/documentation/web-api/reference/player/get-information-about-the-users-current-playback">Get Information About The User’s Current Playback</see> endpoint to check that your issued command was handled correctly by the player.
+            If the device is not found, the request will return <see cref="F:System.Net.HttpStatusCode.NotFound"/> response code.
+            If the user making the request is non-premium, a <see cref="F:System.Net.HttpStatusCode.Forbidden"/> response code will be returned.
+            </returns>
+        </member>
+        <member name="M:SpotifyNet.Spotify.ToggleShuffle(System.Boolean,System.String)">
+            <summary>
+            Toggle shuffle on or off for user’s playback.
+            </summary>
+            <param name="state"><see langword="true"/>: Shuffle user’s playback <see langword="false"/>: Do not shuffle user’s playback.</param>
+            <param name="device_id">The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+            <returns>
+            A completed request will return a <see cref="F:System.Net.HttpStatusCode.NoContent"/> response code, and then issue the command to the player.
+            Due to the asynchronous nature of the issuance of the command, you should use the <see href="https://developer.spotify.com/documentation/web-api/reference/player/get-information-about-the-users-current-playback">Get Information About The User’s Current Playback</see> endpoint to check that your issued command was handled correctly by the player.
+            If the device is not found, the request will return <see cref="F:System.Net.HttpStatusCode.NotFound"/> response code.
+            If the user making the request is non-premium, a <see cref="F:System.Net.HttpStatusCode.Forbidden"/> response code will be returned.
+            </returns>
+        </member>
+        <member name="M:SpotifyNet.Spotify.StartResumePlayback(System.Nullable{System.UInt32},System.String)">
+            <summary>
+            Start a new context or resume current playback on the user’s active device.
+            </summary>
+            <param name="position_ms">Indicates from what position to start playback. Passing in a position that is greater than the length of the track will cause the player to start playing the next song.</param>
+            <param name="device_id">The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+            <returns>
+            A completed request will return a <see cref="F:System.Net.HttpStatusCode.NoContent"/> response code, and then issue the command to the player.
+            Due to the asynchronous nature of the issuance of the command, you should use the <see href="https://developer.spotify.com/documentation/web-api/reference/player/get-information-about-the-users-current-playback">Get Information About The User’s Current Playback</see> endpoint to check that your issued command was handled correctly by the player.
+            If the device is not found, the request will return <see cref="F:System.Net.HttpStatusCode.NotFound"/> response code.
+            If the user making the request is non-premium, a <see cref="F:System.Net.HttpStatusCode.Forbidden"/> response code will be returned.
+            </returns>
+        </member>
+        <member name="M:SpotifyNet.Spotify.StartResumePlayback(System.String,SpotifyNet.Model.Player.Offset,System.Nullable{System.UInt32},System.String)">
+            <summary>
+            Start a new context or resume current playback on the user’s active device.
+            </summary>
+            <param name="context_uri">Spotify URI of the context to play. Valid contexts are albums, artists, playlists.</param>
+            <param name="offset">Indicates from where in the context playback should start. Only available when <paramref name="context_uri"/> corresponds to an album or playlist object.</param>
+            <param name="position_ms">Indicates from what position to start playback. Passing in a position that is greater than the length of the track will cause the player to start playing the next song.</param>
+            <param name="device_id">The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+            <returns>
+            A completed request will return a <see cref="F:System.Net.HttpStatusCode.NoContent"/> response code, and then issue the command to the player.
+            Due to the asynchronous nature of the issuance of the command, you should use the <see href="https://developer.spotify.com/documentation/web-api/reference/player/get-information-about-the-users-current-playback">Get Information About The User’s Current Playback</see> endpoint to check that your issued command was handled correctly by the player.
+            If the device is not found, the request will return <see cref="F:System.Net.HttpStatusCode.NotFound"/> response code.
+            If the user making the request is non-premium, a <see cref="F:System.Net.HttpStatusCode.Forbidden"/> response code will be returned.
+            </returns>
+        </member>
+        <member name="M:SpotifyNet.Spotify.StartResumePlayback(System.String[],SpotifyNet.Model.Player.Offset,System.Nullable{System.UInt32},System.String)">
+            <summary>
+            Start a new context or resume current playback on the user’s active device.
+            </summary>
+            <param name="uris">A array of the Spotify track URIs to play.</param>
+            <param name="offset">Indicates from where in the context playback should start.</param>
+            <param name="position_ms">Indicates from what position to start playback. Passing in a position that is greater than the length of the track will cause the player to start playing the next song.</param>
+            <param name="device_id">The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+            <returns>
+            A completed request will return a <see cref="F:System.Net.HttpStatusCode.NoContent"/> response code, and then issue the command to the player.
+            Due to the asynchronous nature of the issuance of the command, you should use the <see href="https://developer.spotify.com/documentation/web-api/reference/player/get-information-about-the-users-current-playback">Get Information About The User’s Current Playback</see> endpoint to check that your issued command was handled correctly by the player.
+            If the device is not found, the request will return <see cref="F:System.Net.HttpStatusCode.NotFound"/> response code.
+            If the user making the request is non-premium, a <see cref="F:System.Net.HttpStatusCode.Forbidden"/> response code will be returned.
+            </returns>
+        </member>
+        <member name="M:SpotifyNet.Spotify.StartResumePlayback(System.String,System.String[],SpotifyNet.Model.Player.Offset,System.Nullable{System.UInt32},System.String)">
+            <summary>
+            Start a new context or resume current playback on the user’s active device.
+            Only one of either <paramref name="context_uri"/> or <paramref name="uris"/> can be specified. If neither is present, calling will resume playback. If both are present the request will return <see cref="F:System.Net.HttpStatusCode.BadRequest"/>.
+            If <paramref name="context_uri"/> is a Playlist or Album, or when <paramref name="uris"/> is provided, then <paramref name="offset"/> can be added to specify starting track in the context.
+            If the provided <paramref name="context_uri"/> corresponds to an album or playlist object, an <paramref name="offset"/> can be specified either by <see cref="P:SpotifyNet.Model.Player.Offset.Uri"/> OR position.If both are present the request will return <see cref="F:System.Net.HttpStatusCode.BadRequest"/>. If incorrect values are provided for <see cref="P:SpotifyNet.Model.Player.Offset.Position"/> or <see cref="P:SpotifyNet.Model.Player.Offset.Uri"/>, the request may be accepted but with an unpredictable resulting action on playback.
+            </summary>
+            <param name="context_uri">Spotify URI of the context to play. Valid contexts are albums, artists, playlists.</param>
+            <param name="uris">A array of the Spotify track URIs to play.</param>
+            <param name="offset">Indicates from where in the context playback should start. Only available when <paramref name="context_uri"/> corresponds to an album or playlist object, or when the <paramref name="uris"/> parameter is used.</param>
+            <param name="position_ms">Indicates from what position to start playback. Passing in a position that is greater than the length of the track will cause the player to start playing the next song.</param>
+            <param name="device_id">The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+            <returns>
+            A completed request will return a <see cref="F:System.Net.HttpStatusCode.NoContent"/> response code, and then issue the command to the player.
+            Due to the asynchronous nature of the issuance of the command, you should use the <see href="https://developer.spotify.com/documentation/web-api/reference/player/get-information-about-the-users-current-playback">Get Information About The User’s Current Playback</see> endpoint to check that your issued command was handled correctly by the player.
+            If the device is not found, the request will return <see cref="F:System.Net.HttpStatusCode.NotFound"/> response code.
+            If the user making the request is non-premium, a <see cref="F:System.Net.HttpStatusCode.Forbidden"/> response code will be returned.
+            </returns>
         </member>
         <member name="M:SpotifyNet.WebAuthorization.GetAuthorizationCode(System.String,System.String,SpotifyNet.Scope,System.Boolean)">
             <summary>

@@ -5,10 +5,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{61A69F07-E0F1-4345-9398-4ABB76656C64}</ProjectGuid>
+    <ProjectGuid>{D6EF1B84-B8FA-461A-A53F-20E26F84BCB4}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>SpotifyNet.Demo</RootNamespace>
-    <AssemblyName>SpotifyNet.Demo</AssemblyName>
+    <RootNamespace>SpotifyNet.Cover</RootNamespace>
+    <AssemblyName>SpotifyNet.Cover</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -85,7 +85,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Extension.cs" />
+    <Compile Include="Model\Interop\PInvoke.cs" />
+    <Compile Include="Model\Interop\SWP.cs" />
+    <Compile Include="Model\Interop\Win32Point.cs" />
+    <Compile Include="Model\Interop\WINDOWPOS.cs" />
+    <Compile Include="Model\Interop\WM.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="View\MainWindow.xaml">
@@ -132,11 +136,8 @@
     <Resource Include="FodyWeavers.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\SpotifyNet\SpotifyNet.csproj">
-      <Project>{9A098E44-75BF-4E6D-97A8-A180BAFAC318}</Project>
+      <Project>{9a098e44-75bf-4e6d-97a8-a180bafac318}</Project>
       <Name>SpotifyNet</Name>
     </ProjectReference>
   </ItemGroup>

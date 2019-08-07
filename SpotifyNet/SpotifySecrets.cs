@@ -6,7 +6,7 @@
 
         public string ClientSecret { get; set; }
 
-        public SpotifySecrets(string clientID, string clientSecret) : this()
+        public SpotifySecrets(string clientID, string clientSecret)
         {
             this.ClientID = clientID;
             this.ClientSecret = clientSecret;

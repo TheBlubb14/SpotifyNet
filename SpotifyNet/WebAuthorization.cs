@@ -80,15 +80,16 @@ namespace SpotifyNet
             string responseMessage = "";
 
             SetAuthorizationHeader(httpClient, client_id, client_secret);
-            var response = await httpClient.PostAsync(url, content).ConfigureAwait(false);
+            using (var response = await httpClient.PostAsync(url, content).ConfigureAwait(false))
+            {
+                if (response.IsSuccessStatusCode)
+                    responseMessage = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            if (response.IsSuccessStatusCode)
-                responseMessage = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var result = JsonConvert.DeserializeObject<AccessToken>(responseMessage);
+                CalculateExpiration(ref result);
 
-            var result = JsonConvert.DeserializeObject<AccessToken>(responseMessage);
-            CalculateExpiration(ref result);
-
-            return result;
+                return result;
+            }
         }
 
         /// <summary>
@@ -108,19 +109,24 @@ namespace SpotifyNet
                 new KeyValuePair<string, string>("refresh_token", accessToken.refresh_token),
             });
 
-            string responseMessage = "";
-
             SetAuthorizationHeader(httpClient, client_id, client_secret);
-            var response = await httpClient.PostAsync(url, content).ConfigureAwait(false);
 
-            if (response.IsSuccessStatusCode)
-                responseMessage = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            using (var response = await httpClient.PostAsync(url, content).ConfigureAwait(false))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseMessage = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    accessToken = JsonConvert.DeserializeObject<AccessToken>(responseMessage);
 
-            accessToken = JsonConvert.DeserializeObject<AccessToken>(responseMessage);
+                    CalculateExpiration(ref accessToken);
+                }
+                else
+                {
+                    throw new Exception();
+                }
 
-            CalculateExpiration(ref accessToken);
-
-            return accessToken;
+                return accessToken;
+            }
         }
 
         private void CalculateExpiration(ref AccessToken accessToken)

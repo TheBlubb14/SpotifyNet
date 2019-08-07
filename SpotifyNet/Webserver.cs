@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -51,11 +50,13 @@ namespace SpotifyNet
             }
             catch (Exception ex)
             {
+                _ = ex;
                 Debugger.Break();
                 return null;
             }
         }
 
+        [Obsolete]
         public async Task StartListen()
         {
             try
@@ -81,11 +82,12 @@ namespace SpotifyNet
                 {
                     var result = await reader.ReadToEndAsync();
                     var sss = result.Base64Decode(response.ContentEncoding);
-                    var dd = 1;
+                    ;
                 }
             }
             catch (Exception ex)
             {
+                _ = ex;
                 Debugger.Break();
             }
         }

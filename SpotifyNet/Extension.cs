@@ -17,6 +17,14 @@ namespace SpotifyNet
             else return val;
         }
 
+        public static Uri AddParameterString(this Uri uri, string key, string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return uri;
+            else
+                return uri.AddParameter(key, value);
+        }
+
         public static Uri AddParameter(this Uri uri, string key, object value)
         {
             var builder = new UriBuilder(uri);

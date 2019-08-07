@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2005
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29111.141
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpotifyNet", "SpotifyNet\SpotifyNet.csproj", "{9A098E44-75BF-4E6D-97A8-A180BAFAC318}"
 EndProject
@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotifyNet.Demo", "SpotifyNet.Demo\SpotifyNet.Demo.csproj", "{61A69F07-E0F1-4345-9398-4ABB76656C64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotifyNet.Cover", "SpotifyNet.Cover\SpotifyNet.Cover.csproj", "{D6EF1B84-B8FA-461A-A53F-20E26F84BCB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +28,10 @@ Global
 		{61A69F07-E0F1-4345-9398-4ABB76656C64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61A69F07-E0F1-4345-9398-4ABB76656C64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61A69F07-E0F1-4345-9398-4ABB76656C64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6EF1B84-B8FA-461A-A53F-20E26F84BCB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6EF1B84-B8FA-461A-A53F-20E26F84BCB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6EF1B84-B8FA-461A-A53F-20E26F84BCB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6EF1B84-B8FA-461A-A53F-20E26F84BCB4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
