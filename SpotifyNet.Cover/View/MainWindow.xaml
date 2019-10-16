@@ -22,7 +22,7 @@
         Height="640" Width="640" WindowStyle="None" BorderBrush="Black" BorderThickness="1" Topmost="{Binding IsChecked,ElementName=TopMostToggle}">
 
     <Window.Resources>
-        <Style x:Key="CoverButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Style x:Key="CoverButton" TargetType="Button" BasedOn="{StaticResource ResourceKey=MaterialDesignIconButton}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self},Path=IsMouseOver}" Value="True">
                     <Setter Property="Button.Opacity" Value="1.0"/>
