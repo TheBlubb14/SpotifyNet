@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>TheBlubb14</Authors>
+    <Copyright>TheBlubb14</Copyright>
+    <RepositoryUrl>https://github.com/TheBlubb14/SpotifyNet</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/TheBlubb14/SpotifyNet</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
