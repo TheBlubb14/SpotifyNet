@@ -18,5 +18,5 @@ jobs:
       shell: cmd
     
     - name: NuGet push
-      run: nuget push -Source "github" -ApiKey "${{ secrets.GITHUB_TOKEN }}" *.nupkg
+      run: nuget push -Source "github" -ApiKey "${{ secrets.GITHUB_TOKEN }}" SpotifyNet.1.0.0.nupkg
       shell: cmd
