@@ -16,7 +16,7 @@ jobs:
       
     - name: dotnet pack as Release # dotnet pack, performs a RESTORE, BUILD & PACK
       working-directory: src
-      run: dotnet pack --configuration Release -p:PackageVersion=1.0.0 --output ../../output
+      run: dotnet pack --configuration Release -p:PackageVersion=1.0.0 --output output
       
     - name: Setup nuget.exe
       uses: warrenbuckley/Setup-Nuget@v1
