@@ -15,8 +15,8 @@ jobs:
         dotnet-version: '3.0.100-preview8-013656' # SDK Version to use.
       
     - name: dotnet pack as Release # dotnet pack, performs a RESTORE, BUILD & PACK
-      working-directory: src
-      run: dotnet pack --configuration Release -p:PackageVersion=1.0.0
+      working-directory: SpotifyNet
+      run: dotnet pack --configuration Release -p:PackageVersion=1.0.0 --output ../output
       
     - name: Setup nuget.exe
       uses: warrenbuckley/Setup-Nuget@v1
@@ -25,4 +25,5 @@ jobs:
       run: nuget sources Add -Name "github" -Source "https://nuget.pkg.github.com/TheBlubb14/index.json" -UserName "TheBlubb14" -Password "${{ secrets.GITHUB_TOKEN }}"
     
     - name: NuGet push
+      working-directory: output
       run: nuget push *.nupkg -Source "github" -ApiKey "${{ secrets.GITHUB_TOKEN }}"
