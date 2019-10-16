@@ -1,0 +1,22 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@master
+      
+    - name: Setup nuget.exe
+      uses: warrenbuckley/Setup-Nuget@v1
+    
+    - name: Setup NuGet source
+      run: nuget sources Add -Name "github" - Source "https://nuget.pkg.github.com/TheBlubb14/index.json"
+      shell: cmd
+    
+    - name: NuGet push
+      run: nuget push -Source "github" -ApiKey "${{ secrets.GITHUB_TOKEN }}" *.nupkg
+      shell: cmd
