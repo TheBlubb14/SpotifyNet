@@ -14,9 +14,9 @@ jobs:
       uses: warrenbuckley/Setup-Nuget@v1
     
     - name: Setup NuGet source
-      run: nuget sources Add -Name "github" -Source "https://nuget.pkg.github.com/TheBlubb14/index.json"
+      run: nuget sources Add -Name "github" -Source "https://nuget.pkg.github.com/TheBlubb14/index.json" -UserName "TheBlubb14" -Password "${{ secrets.GITHUB_TOKEN }}"
       shell: cmd
     
     - name: NuGet push
-      run: nuget push -Source "github" -ApiKey "${{ secrets.GITHUB_TOKEN }}" *.nupkg
+      run: nuget push -Source "github" *.nupkg
       shell: cmd
