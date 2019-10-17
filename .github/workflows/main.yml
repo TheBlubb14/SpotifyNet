@@ -14,11 +14,11 @@ jobs:
       with:
         dotnet-version: '3.0.100-preview8-013656' # SDK Version to use.
       
-    - name: dotnet pack as Release # dotnet pack, performs a RESTORE, BUILD & PACK
+    - name: dotnet pack release
       working-directory: SpotifyNet
-      run: dotnet pack --configuration Release -p:PackageVersion=1.0.0 --output ../output
+      run: dotnet pack -c Release -o ../output
       
-    - name: Setup nuget.exe
+    - name: Setup NuGet.exe
       uses: warrenbuckley/Setup-Nuget@v1
     
     - name: Setup NuGet source
