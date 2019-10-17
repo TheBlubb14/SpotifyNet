@@ -9,6 +9,7 @@
     <PackageProjectUrl>https://github.com/TheBlubb14/SpotifyNet</PackageProjectUrl>
     <Description>A Spotify WebApi .Net Wrapper</Description>
     <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

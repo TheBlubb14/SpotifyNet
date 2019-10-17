@@ -11,6 +11,7 @@ using SpotifyNet.Model.BasicData;
 using SpotifyNet.Model.Player;
 using SpotifyNet.Model.Player.DeviceData;
 using SpotifyNet.Model.Playlists.PlaylistData;
+using SpotifyNet.Model.Tracks;
 using SpotifyNet.Model.UsersProfile.UserData;
 
 namespace SpotifyNet
@@ -181,6 +182,22 @@ namespace SpotifyNet
                 .AddParameter("offset", offset.Clamp(0, 100_000));
 
             return await DownloadDataAsync<Playlist>(uri);
+        }
+
+        /// <summary>
+        /// Get a list of the songs saved in the current Spotify user’s ‘Your Music’ library.
+        /// </summary>
+        /// <param name="limit">The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50.</param>
+        /// <param name="offset">The index of the first track to return. Maximum offset: 100.000. </param>
+        /// <param name="market">An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+        /// <returns></returns>
+        public async Task<SavedTracks> GetUsersSavedTracksAsync(int limit = 20, int offset = 0, string market = "")
+        {
+            var uri = new Uri($"{api_base_url}/me/tracks")
+                .AddParameter("limit", limit.Clamp(1, 50))
+                .AddParameter("offset", offset.Clamp(0, 100_000));
+
+            return await DownloadDataAsync<SavedTracks>(uri);
         }
 
         /// <summary>
