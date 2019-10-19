@@ -45,7 +45,15 @@ namespace SpotifyNet
 
             using (var server = new Webserver(redirect_uri))
             {
-                Process.Start(uri.ToString());
+                Process.Start(new ProcessStartInfo(uri.ToString())
+                {
+                    // Explicitly set UseShellExecute to true, 
+                    // because in .NetFramework the default value is true but in
+                    // .NetCore the default value changed to false
+                    // See: https://github.com/dotnet/winforms/issues/1520#issuecomment-515899341
+                    // and https://github.com/dotnet/corefx/issues/24704
+                    UseShellExecute = true
+                });
                 result = server.WaitListen();
             }
 
