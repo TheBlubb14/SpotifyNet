@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace SpotifyNet.Cover.ViewModel
 {
@@ -30,6 +31,8 @@ namespace SpotifyNet.Cover.ViewModel
 
         private Spotify spotify;
         private SpotifySecrets spotifySecrets;
+        private DispatcherTimer refreshTimer;
+        private Track currentTrack;
 
         public MainViewModel()
         {
@@ -74,14 +77,30 @@ namespace SpotifyNet.Cover.ViewModel
             }
 
             spotify = new Spotify(spotifySecrets.ClientID, spotifySecrets.ClientSecret);
-            await RefreshSong();
+
+            refreshTimer = new DispatcherTimer(DispatcherPriority.Background);
+            refreshTimer.Interval = TimeSpan.FromSeconds(5);
+            refreshTimer.Tick += RefreshTimer_Tick;
+            refreshTimer.Start();
+
+            await RefreshSong().ConfigureAwait(false);
+        }
+
+        private async void RefreshTimer_Tick(object sender, EventArgs e)
+        {
+            await RefreshSong().ConfigureAwait(false);
         }
 
         public async Task RefreshSong()
         {
             var currentSong = await spotify.GetCurrentlyPlayingAsync();
 
-            SetCover(currentSong?.Item);
+            if (currentTrack == currentSong?.Item)
+                return;
+
+            currentTrack = currentSong?.Item;
+
+            SetCover(currentTrack);
         }
 
         private void SetCover(Track currentSong)
@@ -90,7 +109,7 @@ namespace SpotifyNet.Cover.ViewModel
                 return;
 
             var width = currentSong.Album.Images.Max(x => x.Width);
-            var cover = currentSong.Album.Images.FirstOrDefault(x => x.Width == width);
+            var cover = Array.Find(currentSong.Album.Images, x => x.Width == width);
 
             CoverWidth = cover.Width ?? CoverWidth;
             CoverHeight = cover.Height ?? CoverHeight;
@@ -112,13 +131,13 @@ namespace SpotifyNet.Cover.ViewModel
         private async void Previous()
         {
             await spotify?.SkipPlaybackToPrevious();
-            await RefreshSong();
+            await RefreshSong().ConfigureAwait(false);
         }
 
         private async void Next()
         {
             await spotify?.SkipPlaybackToNext();
-            await RefreshSong();
+            await RefreshSong().ConfigureAwait(false);
         }
 
         private void ShowMessage(string message)

@@ -20,7 +20,11 @@
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
         MouseDown="Window_MouseDown"
         Height="640" Width="640" WindowStyle="None" BorderBrush="Black" BorderThickness="1" Topmost="{Binding IsChecked,ElementName=TopMostToggle}">
-
+    
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="5"/>
+    </WindowChrome.WindowChrome>
+    
     <Window.Resources>
         <Style x:Key="CoverButton" TargetType="Button" BasedOn="{StaticResource ResourceKey=MaterialDesignIconButton}">
             <Style.Triggers>
@@ -44,7 +48,7 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    
+
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <Custom:EventToCommand Command="{Binding LoadedCommand}"/>
