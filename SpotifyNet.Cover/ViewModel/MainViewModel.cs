@@ -55,6 +55,7 @@ namespace SpotifyNet.Cover.ViewModel
         {
             try
             {
+                var fileInfo = new FileInfo(fileName);
 
                 if (!File.Exists(fileName))
                 {
@@ -63,13 +64,16 @@ namespace SpotifyNet.Cover.ViewModel
 
                     // Create default secret file and notify user about missing secrets 
                     // if the code is running without debugger
-                    var fileInfo = new FileInfo("spotify.secrets");
-                    File.WriteAllText(fileInfo.FullName, JsonConvert.SerializeObject(new SpotifySecrets("", "")));
-                    MessageBox.Show($"Please fill in your Spotify secrets into the newly generated file at {fileInfo.FullName}", "Could not find Spotify secrets", MessageBoxButton.OK);
-                    Environment.Exit(0);
+                    fileInfo = new FileInfo("spotify.secrets");
+                    if (!fileInfo.Exists)
+                    {
+                        File.WriteAllText(fileInfo.FullName, JsonConvert.SerializeObject(new SpotifySecrets("", "")));
+                        MessageBox.Show($"Please fill in your Spotify secrets into the newly generated file at {fileInfo.FullName}", "Could not find Spotify secrets", MessageBoxButton.OK);
+                        Environment.Exit(0);
+                    }
                 }
 
-                spotifySecrets = JsonConvert.DeserializeObject<SpotifySecrets>(File.ReadAllText(fileName));
+                spotifySecrets = JsonConvert.DeserializeObject<SpotifySecrets>(File.ReadAllText(fileInfo.FullName));
 
                 return true;
             }
