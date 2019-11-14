@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -54,8 +55,19 @@ namespace SpotifyNet.Cover.ViewModel
         {
             try
             {
+
                 if (!File.Exists(fileName))
-                    return false;
+                {
+                    if (Debugger.IsAttached)
+                        return false;
+
+                    // Create default secret file and notify user about missing secrets 
+                    // if the code is running without debugger
+                    var fileInfo = new FileInfo("spotify.secrets");
+                    File.WriteAllText(fileInfo.FullName, JsonConvert.SerializeObject(new SpotifySecrets("", "")));
+                    MessageBox.Show($"Please fill in your Spotify secrets into the newly generated file at {fileInfo.FullName}", "Could not find Spotify secrets", MessageBoxButton.OK);
+                    Environment.Exit(0);
+                }
 
                 spotifySecrets = JsonConvert.DeserializeObject<SpotifySecrets>(File.ReadAllText(fileName));
 
