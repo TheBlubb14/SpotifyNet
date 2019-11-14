@@ -26,4 +26,4 @@ jobs:
     
     - name: NuGet push
       working-directory: output
-      run: nuget push *.nupkg -Source "github" -ApiKey "${{ secrets.GITHUB_TOKEN }}"
+      run: nuget push *.nupkg -Source "github" -ApiKey "${{ secrets.GITHUB_TOKEN }}" -SkipDuplicate
