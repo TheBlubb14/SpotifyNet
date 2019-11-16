@@ -1,4 +1,4 @@
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Newtonsoft.Json;
 using SpotifyNet.Model.Tracks;
@@ -86,7 +86,7 @@ namespace SpotifyNet.Cover.ViewModel
 
         public async void Loaded()
         {
-            if (!TryLoadSecrets(@"..\..\..\spotify.secret"))
+            if (!TryLoadSecrets(@"..\..\..\..\spotify.secret"))
             {
                 ShowMessage("Spotify secrets couldnt be loaded");
                 return;

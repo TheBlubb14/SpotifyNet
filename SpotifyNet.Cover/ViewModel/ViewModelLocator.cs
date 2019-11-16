@@ -1,41 +1,28 @@
-using CommonServiceLocator;
-using GalaSoft.MvvmLight;
+﻿using CommonServiceLocator;
 using GalaSoft.MvvmLight.Ioc;
 
 namespace SpotifyNet.Cover.ViewModel
 {
-    /// <summary>
-    /// This class contains static references to all the view models in the
-    /// application and provides an entry point for the bindings.
-    /// </summary>
-    public class ViewModelLocator
+    public sealed class ViewModelLocator
     {
-        /// <summary>
-        /// Initializes a new instance of the ViewModelLocator class.
-        /// </summary>
+        public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
+
         public ViewModelLocator()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            ////if (ViewModelBase.IsInDesignModeStatic)
-            ////{
-            ////    // Create design time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DesignDataService>();
-            ////}
-            ////else
-            ////{
-            ////    // Create run time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DataService>();
-            ////}
+            //if (ViewModelBase.IsInDesignModeStatic)
+            //{
+            //    // Create design time view services and models
+            //    SimpleIoc.Default.Register<IDataService, DesignDataService>();
+            //}
+            //else
+            //{
+            //    // Create run time view services and models
+            //    SimpleIoc.Default.Register<IDataService, DataService>();
+            //}
 
             SimpleIoc.Default.Register<MainViewModel>();
-        }
-
-        public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
-
-        public static void Cleanup()
-        {
-            // TODO Clear the ViewModels
         }
     }
 }
