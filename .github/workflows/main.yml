@@ -12,7 +12,7 @@ jobs:
       
     - uses: actions/setup-dotnet@v1 # Downloads & adds dotnet to PATH
       with:
-        dotnet-version: '3.0.100-preview8-013656' # SDK Version to use.
+        dotnet-version: '3.1.100-preview3-014645' # SDK Version to use.
       
     - name: dotnet build SpotifyNet
       shell: powershell
