@@ -14,12 +14,12 @@ jobs:
       with:
         dotnet-version: '3.1.100-preview3-014645' # SDK Version to use.
       
-    - name: Git Tag
-      shell: powershell
-      run: |
-        $tag = (Get-Date -Format "dd.MM.yyyy-hh.mm") + "-" + (git log --format=%h -1)
-        git tag $tag
-        Write-Host git tag set to $tag
+    #- name: Git Tag
+    #  shell: powershell
+    #  run: |
+    #    $tag = (Get-Date -Format "dd.MM.yyyy-hh.mm") + "-" + (git log --format=%h -1)
+    #    git tag $tag
+    #    Write-Host git tag set to $tag
         
     - name: dotnet build SpotifyNet
       shell: powershell
