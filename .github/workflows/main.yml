@@ -3,6 +3,17 @@ name: CI
 on: [push]
 
 jobs:
+  
+  tag:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Bump version and push tag
+      uses: anothrNick/github-tag-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
   build:
 
     runs-on: windows-latest
@@ -59,10 +70,7 @@ jobs:
       working-directory: output
       run: nuget push *.nupkg -Source "github" -ApiKey "${{ secrets.GITHUB_TOKEN }}" -SkipDuplicate
      
-    - name: Bump version and push tag
-      uses: anothrNick/github-tag-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       
    # Create a new release: create a tag, then 'git push origin <tagname>', wait for it to build
     - name: Create a new GitHub release if a new tag is pushed
@@ -76,3 +84,4 @@ jobs:
       #if: startsWith(github.ref, 'refs/tags/')
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        
