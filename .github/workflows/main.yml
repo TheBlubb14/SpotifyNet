@@ -14,6 +14,13 @@ jobs:
       with:
         dotnet-version: '3.1.100-preview3-014645' # SDK Version to use.
       
+    - name: Git Tag
+      shell: powershell
+      run: |
+        $tag = (Get-Date -Format "dd.MM.yyyy-hh.mm") + "-" + (git log --format=%h -1)
+        git tag $tag
+        Write-Host git tag set to $tag
+        
     - name: dotnet build SpotifyNet
       shell: powershell
       run: |
@@ -31,12 +38,12 @@ jobs:
     - uses: actions/upload-artifact@v1
       with:
         name: SpotifyNet
-        path: C:\artifacts\SpotifyNet.zip
+        path: ..\output\SpotifyNet
       
     - uses: actions/upload-artifact@v1
       with:
         name: SpotifyNet.Cover
-        path: C:\artifacts\SpotifyNet.Cover.zip
+        path: ..\output\SpotifyNet.Cover
       
     - name: dotnet pack release
       working-directory: SpotifyNet
@@ -51,3 +58,16 @@ jobs:
     - name: NuGet push
       working-directory: output
       run: nuget push *.nupkg -Source "github" -ApiKey "${{ secrets.GITHUB_TOKEN }}" -SkipDuplicate
+      
+   # Create a new release: create a tag, then 'git push origin <tagname>', wait for it to build
+    - name: Create a new GitHub release if a new tag is pushed
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          C:\artifacts\SpotifyNet.zip
+          C:\artifacts\SpotifyNet.Cover.zip
+        #body: |
+
+      #if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
