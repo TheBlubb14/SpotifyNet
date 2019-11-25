@@ -70,8 +70,10 @@ jobs:
       working-directory: output
       run: nuget push *.nupkg -Source "github" -ApiKey "${{ secrets.GITHUB_TOKEN }}" -SkipDuplicate
      
-
-      
+    - name: Ref Out
+      shell: powershell
+      run: Write-Host GITHUB_REF ${{ GITHUB_REF }}
+           
    # Create a new release: create a tag, then 'git push origin <tagname>', wait for it to build
     - name: Create a new GitHub release if a new tag is pushed
       uses: softprops/action-gh-release@v1
