@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     
     outputs:
-      version: ${{ steps.github-tag-action.outputs.tag }}
+      version: ${{ steps.tag-action.outputs.new_tag }}
    
     steps:
       - name: Checkout
@@ -16,6 +16,7 @@ jobs:
           fetch-depth: 0 # set the fetch-depth for actions/checkout@master to be sure you retrieve all commits to look for the semver commit message.
 
       - name: Bump version and push tag
+        id: tag-action
         uses: anothrNick/github-tag-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
