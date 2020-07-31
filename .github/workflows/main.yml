@@ -44,14 +44,14 @@ jobs:
         shell: powershell
         run: |
           New-Item -ItemType Directory -Path C:\artifacts -Force
-          dotnet build .\SpotifyNet\SpotifyNet.csproj -o ../output/SpotifyNet -p:Version=${{ needs.tag.outputs.version }}
+          dotnet build .\SpotifyNet\SpotifyNet.csproj --nologo -c Release -o ../output/SpotifyNet -p:Version=${{ needs.tag.outputs.version }}
           Compress-Archive -Path ..\output\SpotifyNet\* -DestinationPath C:\artifacts\SpotifyNet.zip
     
       - name: dotnet build SpotifyNet.Cover
         shell: powershell
         run: |
           New-Item -ItemType Directory -Path C:\artifacts -Force
-          dotnet build .\SpotifyNet.Cover\SpotifyNet.Cover.csproj -o ../output/SpotifyNet.Cover -p:Version=${{ needs.tag.outputs.version }}
+          dotnet build .\SpotifyNet.Cover\SpotifyNet.Cover.csproj --nologo -c Release -o ../output/SpotifyNet.Cover -p:Version=${{ needs.tag.outputs.version }}
           Compress-Archive -Path ..\output\SpotifyNet.Cover\* -DestinationPath C:\artifacts\SpotifyNet.Cover.zip
        
       - uses: actions/upload-artifact@v1
