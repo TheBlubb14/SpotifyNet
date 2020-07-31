@@ -8,8 +8,8 @@
     <RepositoryUrl>https://github.com/TheBlubb14/SpotifyNet</RepositoryUrl>
     <PackageProjectUrl>https://github.com/TheBlubb14/SpotifyNet</PackageProjectUrl>
     <Description>A Spotify WebApi .Net Wrapper</Description>
-    <Version>1.0.3</Version>
-    <AssemblyVersion>1.0.3.0</AssemblyVersion>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.3.0</FileVersion>
   </PropertyGroup>
 
