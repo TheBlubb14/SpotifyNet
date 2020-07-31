@@ -18,17 +18,21 @@ jobs:
           REPO_OWNER: TheBlubb14
     
   build:
+    needs: [tag]
     runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@master
        
+      - name: Fetch tags
+        run: git fetch origin +refs/tags/*:refs/tags/*
+        
       - name: Get version
         id: get-version
-        run: echo "::set-output name=version::${GITHUB_REF/refs\/tags\//}"
+        run: echo "::set-output name=version::${env:GITHUB_REF/refs\/tags\//}"
        
-      - name: Display the path
-        run: echo "test ${{ steps.get-version.outputs.version }}"
+      - name: Display version
+        run: echo test ${{ steps.get-version.outputs.version }}
 
       #ä- name: Setup dotnet
       #ä  uses: actions/setup-dotnet@v1 # Downloads & adds dotnet to PATH
