@@ -23,8 +23,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
        
+      - name: Get version
+        id: get-version
+        run: echo "::set-output name=version::${GITHUB_REF/refs\/tags\//}"
+       
       - name: Display the path
-        run: echo "test ${{ steps.github-tag-action.outputs.tag }}"
+        run: echo "test ${{ steps.get-version.outputs.version }}"
 
       #ä- name: Setup dotnet
       #ä  uses: actions/setup-dotnet@v1 # Downloads & adds dotnet to PATH
