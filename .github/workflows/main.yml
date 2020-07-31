@@ -3,10 +3,8 @@ name: CI
 on: [push]
 
 jobs: 
-  build:
-
-    runs-on: windows-latest
-    
+  tag:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@master
@@ -18,9 +16,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO_OWNER: TheBlubb14
-
+    
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+       
       - name: Display the path
-        run: echo %PATH%
+        run: echo steps.github-tag-action.outputs.tag
 
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1 # Downloads & adds dotnet to PATH
