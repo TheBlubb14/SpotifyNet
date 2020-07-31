@@ -24,58 +24,58 @@ jobs:
         uses: actions/checkout@master
        
       - name: Display the path
-        run: echo ${{ steps.github-tag-action.outputs.tag }}
+        run: echo "test ${{ steps.github-tag-action.outputs.tag }}"
 
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v1 # Downloads & adds dotnet to PATH
-        with:
-          dotnet-version: '3.1.302' # SDK Version to use.
-        
-      - name: dotnet build SpotifyNet
-        shell: powershell
-        run: |
-          New-Item -ItemType Directory -Path C:\artifacts -Force
-          dotnet build .\SpotifyNet\SpotifyNet.csproj -o ../output/SpotifyNet -p:Version=${{ steps.github-tag-action.outputs.tag }}
-          Compress-Archive -Path ..\output\SpotifyNet\* -DestinationPath C:\artifacts\SpotifyNet.zip
-    
-      - name: dotnet build SpotifyNet.Cover
-        shell: powershell
-        run: |
-          New-Item -ItemType Directory -Path C:\artifacts -Force
-          dotnet build .\SpotifyNet.Cover\SpotifyNet.Cover.csproj -o ../output/SpotifyNet.Cover -p:Version=${{ steps.github-tag-action.outputs.tag }}
-          Compress-Archive -Path ..\output\SpotifyNet.Cover\* -DestinationPath C:\artifacts\SpotifyNet.Cover.zip
-        
-      - uses: actions/upload-artifact@v1
-        with:
-          name: SpotifyNet
-          path: ..\output\SpotifyNet
-      
-      - uses: actions/upload-artifact@v1
-        with:
-          name: SpotifyNet.Cover
-          path: ..\output\SpotifyNet.Cover
-      
-      - name: dotnet pack release
-        working-directory: SpotifyNet
-        run: dotnet pack -p:PackageVersion=${{ steps.github-tag-action.outputs.tag }} -c Release -o ../output
-      
-      - name: Setup NuGet.exe
-        uses: warrenbuckley/Setup-Nuget@v1
-    
-      - name: Setup NuGet source
-        run: nuget sources Add -Name "github" -Source "https://nuget.pkg.github.com/TheBlubb14/index.json" -UserName "TheBlubb14" -Password "${{ secrets.GITHUB_TOKEN }}"
-    
-      - name: NuGet push
-        working-directory: output
-        run: nuget push *.nupkg -Source "github" -ApiKey "${{ secrets.GITHUB_TOKEN }}" -SkipDuplicate
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
+      #ä- name: Setup dotnet
+      #ä  uses: actions/setup-dotnet@v1 # Downloads & adds dotnet to PATH
+      #ä  with:
+      #ä    dotnet-version: '3.1.302' # SDK Version to use.
+      #ä  
+      #ä- name: dotnet build SpotifyNet
+      #ä  shell: powershell
+      #ä  run: |
+      #ä    New-Item -ItemType Directory -Path C:\artifacts -Force
+      #ä    dotnet build .\SpotifyNet\SpotifyNet.csproj -o ../output/SpotifyNet -p:Version=${{ steps.github-tag-action.outputs.tag }}
+      #ä    Compress-Archive -Path ..\output\SpotifyNet\* -DestinationPath C:\artifacts\SpotifyNet.zip
+    #ä
+      #ä- name: dotnet build SpotifyNet.Cover
+      #ä  shell: powershell
+      #ä  run: |
+      #ä    New-Item -ItemType Directory -Path C:\artifacts -Force
+      #ä    dotnet build .\SpotifyNet.Cover\SpotifyNet.Cover.csproj -o ../output/SpotifyNet.Cover -p:Version=${{ steps.github-tag-action.outputs.tag }}
+      #ä    Compress-Archive -Path ..\output\SpotifyNet.Cover\* -DestinationPath C:\artifacts\SpotifyNet.Cover.zip
+      #ä  
+      #ä- uses: actions/upload-artifact@v1
+      #ä  with:
+      #ä    name: SpotifyNet
+      #ä    path: ..\output\SpotifyNet
+      #ä
+      #ä- uses: actions/upload-artifact@v1
+      #ä  with:
+      #ä    name: SpotifyNet.Cover
+      #ä    path: ..\output\SpotifyNet.Cover
+      #ä
+      #ä- name: dotnet pack release
+      #ä  working-directory: SpotifyNet
+      #ä  run: dotnet pack -p:PackageVersion=${{ steps.github-tag-action.outputs.tag }} -c Release -o ../output
+      #ä
+      #ä- name: Setup NuGet.exe
+      #ä  uses: warrenbuckley/Setup-Nuget@v1
+    #ä
+      #ä- name: Setup NuGet source
+      #ä  run: nuget sources Add -Name "github" -Source "https://nuget.pkg.github.com/TheBlubb14/index.json" -UserName "TheBlubb14" -Password "${{ secrets.GITHUB_TOKEN }}"
+    #ä
+      #ä- name: NuGet push
+      #ä  working-directory: output
+      #ä  run: nuget push *.nupkg -Source "github" -ApiKey "${{ secrets.GITHUB_TOKEN }}" -SkipDuplicate
+#ä
+      #ä- name: Create Release
+      #ä  id: create_release
+      #ä  uses: actions/create-release@v1
+      #ä  env:
+      #ä    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      #ä  with:
+      #ä    tag_name: ${{ github.ref }}
+      #ä    release_name: Release ${{ github.ref }}
+      #ä    draft: false
+      ##    prerelease: false
