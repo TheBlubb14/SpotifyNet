@@ -62,7 +62,7 @@ jobs:
       - uses: actions/upload-artifact@v1
         with:
           name: SpotifyNet.Cover
-          path: ..\output\SpotifyNet.Cover
+          path: C:\artifacts\SpotifyNet.Cover.zip
      
       - name: dotnet pack release
         working-directory: SpotifyNet
