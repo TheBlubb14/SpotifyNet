@@ -52,7 +52,7 @@ jobs:
         run: |
           New-Item -ItemType Directory -Path C:\artifacts -Force
           dotnet publish .\SpotifyNet.Cover\SpotifyNet.Cover.csproj --nologo -p:PublishProfile=Properties\PublishProfiles\FolderProfile.pubxml -p:Version=${{ needs.tag.outputs.version }}
-          Compress-Archive -Path ..\output\SpotifyNet.Cover\* -DestinationPath C:\artifacts\SpotifyNet.Cover.zip
+          Compress-Archive -Path output\SpotifyNet.Cover\* -DestinationPath C:\artifacts\SpotifyNet.Cover.zip
        
       #- uses: actions/upload-artifact@v1
       #  with:
