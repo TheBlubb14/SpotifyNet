@@ -40,24 +40,24 @@ jobs:
         with:
           dotnet-version: '3.1.x' # SDK Version to use.
        
-      - name: dotnet build SpotifyNet
-        shell: powershell
-        run: |
-          New-Item -ItemType Directory -Path C:\artifacts -Force
-          dotnet build .\SpotifyNet\SpotifyNet.csproj --nologo -r win-x64 -c Debug -o ../output/SpotifyNet -p:Version=${{ needs.tag.outputs.version }}
-          Compress-Archive -Path ..\output\SpotifyNet\* -DestinationPath C:\artifacts\SpotifyNet.zip
+      #- name: dotnet build SpotifyNet
+      #  shell: powershell
+      #  run: |
+      #    New-Item -ItemType Directory -Path C:\artifacts -Force
+      #    dotnet build .\SpotifyNet\SpotifyNet.csproj --nologo -r win-x64 -c Debug -o ../output/SpotifyNet -p:Version=${{ needs.tag.outputs.version }}
+      #    Compress-Archive -Path ..\output\SpotifyNet\* -DestinationPath C:\artifacts\SpotifyNet.zip
     
       - name: dotnet build SpotifyNet.Cover
         shell: powershell
         run: |
           New-Item -ItemType Directory -Path C:\artifacts -Force
-          dotnet build .\SpotifyNet.Cover\SpotifyNet.Cover.csproj --nologo -r win-x64 -c Debug -o ../output/SpotifyNet.Cover -p:Version=${{ needs.tag.outputs.version }}
+          dotnet publish .\SpotifyNet.Cover\SpotifyNet.Cover.csproj --nologo -p:PublishProfile=Properties\PublishProfiles\FolderProfile.pubxml -p:Version=${{ needs.tag.outputs.version }}
           Compress-Archive -Path ..\output\SpotifyNet.Cover\* -DestinationPath C:\artifacts\SpotifyNet.Cover.zip
        
-      - uses: actions/upload-artifact@v1
-        with:
-          name: SpotifyNet
-          path: ..\output\SpotifyNet
+      #- uses: actions/upload-artifact@v1
+      #  with:
+      #    name: SpotifyNet
+      #    path: ..\output\SpotifyNet
      
       - uses: actions/upload-artifact@v1
         with:
