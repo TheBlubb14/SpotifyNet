@@ -62,7 +62,7 @@ jobs:
       #    name: SpotifyNet
       #    path: ..\output\SpotifyNet
      
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v2
         with:
           name: SpotifyNet.Cover
           path: C:\artifacts\SpotifyNet.Cover.zip
@@ -72,7 +72,7 @@ jobs:
         run: dotnet pack -p:PackageVersion=${{ needs.tag.outputs.version }} -c Release -o ../output
      
       - name: Setup NuGet.exe
-        uses: warrenbuckley/Setup-Nuget@v1
+        uses: nuget/setup-nuget@v1.0.5
     
       - name: Setup NuGet source
         run: nuget sources Add -Name "github" -Source "https://nuget.pkg.github.com/TheBlubb14/index.json" -UserName "TheBlubb14" -Password "${{ secrets.GITHUB_TOKEN }}"
@@ -83,7 +83,7 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: actions/create-release@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
@@ -94,7 +94,7 @@ jobs:
           
       - name: Upload Release Asset
         id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
