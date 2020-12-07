@@ -57,6 +57,108 @@
             The total number of followers.
             </summary>
         </member>
+        <member name="T:SpotifyNet.Scope">
+            <summary>
+            Scopes provide Spotify users using third-party apps the confidence that only the 
+            information they choose to share will be shared, and nothing more.
+            </summary>
+        </member>
+        <member name="F:SpotifyNet.Scope.None">
+            <summary>
+            No scopes
+            </summary>
+        </member>
+        <member name="F:SpotifyNet.Scope.UserReadPrivate">
+            <summary>
+            Read access to user’s subscription details (type of user account).
+            </summary>
+        </member>
+        <member name="F:SpotifyNet.Scope.UserReadEmail">
+            <summary>
+            Read access to user’s email address.
+            </summary>
+        </member>
+        <member name="F:SpotifyNet.Scope.UserReadBirthday">
+            <summary>
+            Read access to user’s birthdate.
+            </summary>
+        </member>
+        <member name="F:SpotifyNet.Scope.PlaylistReadPrivate">
+            <summary>
+            Read access to user's private playlists.
+            </summary>
+        </member>
+        <member name="F:SpotifyNet.Scope.PlaylistModifyPrivate">
+            <summary>
+            Write access to a user's private playlists.
+            </summary>
+        </member>
+        <member name="F:SpotifyNet.Scope.PlaylistModifyPublic">
+            <summary>
+            Write access to a user's public playlists.
+            </summary>
+        </member>
+        <member name="F:SpotifyNet.Scope.PlaylistReadCollaborative">
+            <summary>
+            Include collaborative playlists when requesting a user's playlists.
+            </summary>
+        </member>
+        <member name="F:SpotifyNet.Scope.UserTopRead">
+            <summary>
+            Read access to a user's top artists and tracks.
+            </summary>
+        </member>
+        <member name="F:SpotifyNet.Scope.UserReadRecentlyPlayed">
+            <summary>
+            Read access to a user’s recently played tracks.
+            </summary>
+        </member>
+        <member name="F:SpotifyNet.Scope.UserLibraryRead">
+            <summary>
+            Read access to a user's "Your Music" library.
+            </summary>
+        </member>
+        <member name="F:SpotifyNet.Scope.UserLibraryModify">
+            <summary>
+            Write/delete access to a user's "Your Music" library.
+            </summary>
+        </member>
+        <member name="F:SpotifyNet.Scope.UserReadCurrentlyPlaying">
+            <summary>
+            Read access to a user’s currently playing content.
+            </summary>
+        </member>
+        <member name="F:SpotifyNet.Scope.UserModifyPlaybackState">
+            <summary>
+            Write access to a user’s playback state.
+            </summary>
+        </member>
+        <member name="F:SpotifyNet.Scope.UserReadPlaybackState">
+            <summary>
+            Read access to a user’s player state.
+            </summary>
+        </member>
+        <member name="F:SpotifyNet.Scope.UserFollowModify">
+            <summary>
+            Write/delete access to the list of artists and other users that the user follows.
+            </summary>
+        </member>
+        <member name="F:SpotifyNet.Scope.UserFollowRead">
+            <summary>
+            Read access to the list of artists and other users that the user follows.
+            </summary>
+        </member>
+        <member name="F:SpotifyNet.Scope.Streaming">
+            <summary>
+            Control playback of a Spotify track. This scope is currently available to the Web Playback SDK.
+            The user must have a Spotify Premium account.
+            </summary>
+        </member>
+        <member name="F:SpotifyNet.Scope.All">
+            <summary>
+            All scopes which are inside <see cref="T:SpotifyNet.Scope"/>.
+            </summary>
+        </member>
         <member name="M:SpotifyNet.Spotify.GetMeAsync">
             <summary>
             Get Current User's Profile 

@@ -88,5 +88,29 @@ namespace SpotifyNet.Cover.View
             if (e.ChangedButton == MouseButton.Left)
                 this.DragMove();
         }
+
+        private void CanvasLeft_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount < 2)
+                return;
+
+            mainViewModel.PreviousCommand.Execute(e);
+        }
+
+        private void CanvasMid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount < 2)
+                return;
+
+            mainViewModel.StartResumeCommand.Execute(e);
+        }
+
+        private void CanvasRight_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount < 2)
+                return;
+
+            mainViewModel.PreviousCommand.Execute(e);
+        }
     }
 }

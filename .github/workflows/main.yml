@@ -1,6 +1,9 @@
 name: CI
 
-on: [push]
+on: 
+    push:
+      branches:
+        - master
 
 jobs: 
   tag:
@@ -38,7 +41,7 @@ jobs:
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1 # Downloads & adds dotnet to PATH
         with:
-          dotnet-version: '3.1.x' # SDK Version to use.
+          dotnet-version: '5.0.x' # SDK Version to use.
        
       #- name: dotnet build SpotifyNet
       #  shell: powershell

@@ -26,7 +26,22 @@
     </WindowChrome.WindowChrome>
 
     <Window.Resources>
-        <Style x:Key="CoverButton" TargetType="Button" BasedOn="{StaticResource ResourceKey=MaterialDesignIconButton}">
+        <Style x:Key="CoverIcon" TargetType="materialDesign:PackIcon" BasedOn="{StaticResource {x:Type materialDesign:PackIcon}}">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Width" Value="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}" />
+            <Setter Property="Height" Value="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=IsMouseOver,RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}" Value="True">
+                    <Setter Property="Button.Opacity" Value="1"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=IsMouseOver,RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}" Value="False">
+                    <Setter Property="Button.Opacity" Value="0"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!--<Style x:Key="CoverButton" TargetType="Button" BasedOn="{StaticResource ResourceKey=MaterialDesignIconButton}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self},Path=IsMouseOver}" Value="True">
                     <Setter Property="Button.Opacity" Value="1.0"/>
@@ -35,7 +50,7 @@
                     <Setter Property="Button.Opacity" Value="0.2"/>
                 </DataTrigger>
             </Style.Triggers>
-        </Style>
+        </Style>-->
 
         <Style x:Key="CoverToggle" TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
             <Style.Triggers>
@@ -65,7 +80,28 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Image Margin="0" Grid.Column="0" Grid.ColumnSpan="99" Grid.Row="0" Source="{Binding Cover}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-        <Button Grid.Row="0" Grid.Column="0" Style="{StaticResource CoverButton}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding PreviousCommand}">
+        <Canvas Grid.Row="0" Grid.Column="0" Background="Transparent" MouseLeftButtonDown="CanvasLeft_MouseLeftButtonDown">
+            <Grid
+                Width="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}"
+                Height="{Binding ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}">
+                <materialDesign:PackIcon Kind="SkipPrevious" Style="{StaticResource CoverIcon}" />
+            </Grid>
+        </Canvas>
+        <Canvas Grid.Row="0" Grid.Column="1" Background="Transparent" MouseLeftButtonDown="CanvasMid_MouseLeftButtonDown">
+            <Grid
+                Width="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}"
+                Height="{Binding ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}">
+                <materialDesign:PackIcon Kind="PlayPause" Style="{StaticResource CoverIcon}" />
+            </Grid>
+        </Canvas>
+        <Canvas Grid.Row="0" Grid.Column="2" Background="Transparent" MouseLeftButtonDown="CanvasRight_MouseLeftButtonDown" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid
+                Width="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}"
+                Height="{Binding ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}">
+                <materialDesign:PackIcon Kind="SkipNext" Style="{StaticResource CoverIcon}" />
+            </Grid>
+        </Canvas>
+        <!--<Button Grid.Row="0" Grid.Column="0" Style="{StaticResource CoverButton}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding PreviousCommand}">
             <materialDesign:PackIcon Kind="SkipPrevious"/>
         </Button>
         <Button Grid.Row="0" Grid.Column="1" Style="{StaticResource CoverButton}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding StartResumeCommand}">
@@ -73,7 +109,7 @@
         </Button>
         <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource CoverButton}" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding NextCommand}">
             <materialDesign:PackIcon Kind="SkipNext"/>
-        </Button>
+        </Button>-->
         <ToggleButton Grid.Column="0" Style="{StaticResource CoverToggle}" VerticalAlignment="Bottom" x:Name="TopMostToggle" HorizontalAlignment="Left"/>
     </Grid>
 </Window>
