@@ -35,6 +35,8 @@ namespace SpotifyNet.Cover.ViewModel
         private DispatcherTimer refreshTimer;
         private Track currentTrack;
 
+        bool Designer = false;
+
         public MainViewModel()
         {
             if (IsInDesignMode)
@@ -86,6 +88,9 @@ namespace SpotifyNet.Cover.ViewModel
 
         public async void Loaded()
         {
+            if (Designer)
+                return;
+
             if (!TryLoadSecrets(@"..\..\..\..\spotify.secret"))
             {
                 ShowMessage("Spotify secrets couldnt be loaded");
@@ -134,6 +139,9 @@ namespace SpotifyNet.Cover.ViewModel
 
         private async void StartResume()
         {
+            if (Designer)
+                return;
+
             var status = await spotify?.GetCurrentPlaybackInfoAsync();
 
             if (status.IsPlaying)
@@ -146,12 +154,18 @@ namespace SpotifyNet.Cover.ViewModel
 
         private async void Previous()
         {
+            if (Designer)
+                return;
+
             await spotify?.SkipPlaybackToPrevious();
             await RefreshSong().ConfigureAwait(false);
         }
 
         private async void Next()
         {
+            if (Designer)
+                return;
+
             await spotify?.SkipPlaybackToNext();
             await RefreshSong().ConfigureAwait(false);
         }
