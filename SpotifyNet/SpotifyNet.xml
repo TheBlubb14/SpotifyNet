@@ -104,6 +104,41 @@
             Allows to update the user interface based on which playback actions are available within the current context
             </summary>
         </member>
+        <member name="P:SpotifyNet.Model.Player.DeviceData.Device.Id">
+            <summary>
+            The device ID. This may be <see langword="null"/>.
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.DeviceData.Device.IsActive">
+            <summary>
+            If this device is the currently active device.
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.DeviceData.Device.IsPrivateSession">
+            <summary>
+            If this device is currently in a private session.
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.DeviceData.Device.IsRestricted">
+            <summary>
+            Whether controlling this device is restricted. At present if this is <see langword="true"/> then no Web API commands will be accepted by this device.
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.DeviceData.Device.Name">
+            <summary>
+            The name of the device.
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.DeviceData.Device.Type">
+            <summary>
+            Device type, such as “computer”, “smartphone” or “speaker”.
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.DeviceData.Device.VolumePercent">
+            <summary>
+            The current volume in percent. This may be <see langword="null"/>.
+            </summary>
+        </member>
         <member name="T:SpotifyNet.Model.Player.Offset">
             <summary>
             Indicates from where in the context playback should start.

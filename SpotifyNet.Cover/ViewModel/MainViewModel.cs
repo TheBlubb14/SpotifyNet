@@ -22,6 +22,8 @@ namespace SpotifyNet.Cover.ViewModel
 
         public BitmapImage Cover { get; set; }
 
+        public bool IsPrivateSession { get; set; }
+
         public ICommand LoadedCommand { get; set; }
 
         public ICommand StartResumeCommand { get; set; }
@@ -104,22 +106,25 @@ namespace SpotifyNet.Cover.ViewModel
             refreshTimer.Tick += RefreshTimer_Tick;
             refreshTimer.Start();
 
-            await RefreshSong().ConfigureAwait(false);
+            await Refresh().ConfigureAwait(false);
         }
 
         private async void RefreshTimer_Tick(object sender, EventArgs e)
         {
-            await RefreshSong().ConfigureAwait(false);
+            await Refresh().ConfigureAwait(false);
         }
 
-        public async Task RefreshSong()
+        public async Task Refresh()
         {
-            var currentSong = await spotify.GetCurrentlyPlayingAsync();
+            var status = await spotify.GetCurrentPlaybackInfoAsync();
 
-            if (currentTrack == currentSong?.Item)
+            // In private session we dont get track informations
+            IsPrivateSession = status?.Device?.IsPrivateSession ?? false;
+
+            if (currentTrack == status?.Item)
                 return;
 
-            currentTrack = currentSong?.Item;
+            currentTrack = status?.Item;
 
             SetCover(currentTrack);
         }
@@ -158,7 +163,7 @@ namespace SpotifyNet.Cover.ViewModel
                 return;
 
             await spotify?.SkipPlaybackToPrevious();
-            await RefreshSong().ConfigureAwait(false);
+            await Refresh().ConfigureAwait(false);
         }
 
         private async void Next()
@@ -167,7 +172,7 @@ namespace SpotifyNet.Cover.ViewModel
                 return;
 
             await spotify?.SkipPlaybackToNext();
-            await RefreshSong().ConfigureAwait(false);
+            await Refresh().ConfigureAwait(false);
         }
 
         private async void SetVolume(int volume)

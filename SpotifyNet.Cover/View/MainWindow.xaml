@@ -26,11 +26,13 @@
     </WindowChrome.WindowChrome>
 
     <Window.Resources>
-        <Style x:Key="CoverIcon" TargetType="materialDesign:PackIcon" BasedOn="{StaticResource {x:Type materialDesign:PackIcon}}">
+        <Style x:Key="Icon" TargetType="materialDesign:PackIcon" BasedOn="{StaticResource {x:Type materialDesign:PackIcon}}">
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Width" Value="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}" />
-            <Setter Property="Height" Value="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}" />
+            <Setter Property="Width" Value="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Grid}}" />
+            <Setter Property="Height" Value="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Grid}}" />
+        </Style>
+        <Style x:Key="CoverIcon" TargetType="materialDesign:PackIcon" BasedOn="{StaticResource Icon}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Path=IsMouseOver,RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}" Value="True">
                     <Setter Property="Button.Opacity" Value="1"/>
@@ -79,7 +81,10 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Image Margin="0" Grid.Column="0" Grid.ColumnSpan="99" Grid.Row="0" Source="{Binding Cover}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        
+        <materialDesign:PackIcon Kind="Incognito" Margin="0" Grid.Column="0" Grid.ColumnSpan="99" Grid.Row="0" Style="{StaticResource Icon}" />
+        <Image Margin="0" Grid.Column="0" Grid.ColumnSpan="99" Grid.Row="0" Source="{Binding Cover}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding IsPrivateSession, Converter={StaticResource InverseBoolToVisConverter}}"/>
+        
         <Canvas Grid.Row="0" Grid.Column="0" Background="Transparent" MouseLeftButtonDown="CanvasLeft_MouseLeftButtonDown">
             <Grid
                 Width="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}"
