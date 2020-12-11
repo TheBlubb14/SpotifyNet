@@ -406,6 +406,25 @@ namespace SpotifyNet
             var content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
             return await PutAsync(uri, content);
         }
+
+        /// <summary>
+        /// Set the volume for the user’s current playback device.
+        /// </summary>
+        /// <param name="volume_percent">The volume to set. Must be a value from 0 to 100 inclusive.</param>
+        /// <param name="device_id">The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+        /// <returns>
+        /// A completed request will return a <see cref="HttpStatusCode.NoContent"/> response code, and then issue the command to the player. Due to the asynchronous nature of the issuance of the command, you should use the <see href="https://developer.spotify.com/documentation/web-api/reference/player/get-information-about-the-users-current-playback">Get Information About The User’s Current Playback</see> endpoint to check that your issued command was handled correctly by the player.
+        ///If the device is not found, the request will return <see cref="HttpStatusCode.NotFound"/> response code.
+        /// If the user making the request is non-premium, a <see cref="HttpStatusCode.Forbidden"/> response code will be returned.
+        /// </returns>
+        public async Task<HttpStatusCode> SetPlaybackVolume(int volume_percent, string device_id = null)
+        {
+            var uri = new Uri($"{api_base_url}/me/player/volume")
+                .AddParameter("volume_percent", volume_percent.Clamp(0, 100))
+                .AddParameterString("device_id", device_id);
+
+            return await PutAsync(uri);
+        }
         #endregion
 
         public void Dispose()

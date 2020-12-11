@@ -19,6 +19,91 @@
             The image width in pixels.
             </summary>
         </member>
+        <member name="T:SpotifyNet.Model.Player.CurrentlyPlaying">
+            <summary>
+            Currently Playing Object
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.CurrentlyPlaying.Timestamp">
+            <summary>
+            Unix Millisecond Timestamp when data was fetched
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.CurrentlyPlaying.Context">
+            <summary>
+            A Context Object. Can be null.
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.CurrentlyPlaying.ProgressMs">
+            <summary>
+            Progress into the currently playing track or episode. Can be null.
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.CurrentlyPlaying.Item">
+            <summary>
+            The currently playing track or episode. Can be null.
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.CurrentlyPlaying.CurrentlyPlayingType">
+            <summary>
+            The object type of the currently playing item. Can be one of track, episode, ad or unknown.
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.CurrentlyPlaying.IsPlaying">
+            <summary>
+            If something is currently playing.
+            </summary>
+        </member>
+        <member name="T:SpotifyNet.Model.Player.CurrentPlaybackInfo">
+            <summary>
+            Currently Playing Context
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.CurrentPlaybackInfo.Device">
+            <summary>
+            The device that is currently active
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.CurrentPlaybackInfo.ShuffleState">
+            <summary>
+            If shuffle is on or off
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.CurrentPlaybackInfo.RepeatState">
+            <summary>
+            off, track, context
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.CurrentPlaybackInfo.Timestamp">
+            <summary>
+            Unix Millisecond Timestamp when data was fetched
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.CurrentPlaybackInfo.Context">
+            <summary>
+            A Context Object. Can be null (e.g. If private session is enabled this will be null).
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.CurrentPlaybackInfo.ProgressMs">
+            <summary>
+            Progress into the currently playing track. Can be null (e.g. If private session is enabled this will be null).
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.CurrentPlaybackInfo.Item">
+            <summary>
+            The currently playing track or episode. Can be null (e.g. If private session is enabled this will be null).
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.CurrentPlaybackInfo.CurrentlyPlayingType">
+            <summary>
+            The object type of the currently playing item. Can be one of track, episode, ad or unknown.
+            </summary>
+        </member>
+        <member name="P:SpotifyNet.Model.Player.CurrentPlaybackInfo.IsPlaying">
+            <summary>
+            Allows to update the user interface based on which playback actions are available within the current context
+            </summary>
+        </member>
         <member name="T:SpotifyNet.Model.Player.Offset">
             <summary>
             Indicates from where in the context playback should start.
@@ -312,6 +397,18 @@
             If the device is not found, the request will return <see cref="F:System.Net.HttpStatusCode.NotFound"/> response code.
             If the user making the request is non-premium, a <see cref="F:System.Net.HttpStatusCode.Forbidden"/> response code will be returned.
             </returns>
+        </member>
+        <member name="M:SpotifyNet.Spotify.SetPlaybackVolume(System.Int32,System.String)">
+             <summary>
+             Set the volume for the user’s current playback device.
+             </summary>
+             <param name="volume_percent">The volume to set. Must be a value from 0 to 100 inclusive.</param>
+             <param name="device_id">The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+             <returns>
+             A completed request will return a <see cref="F:System.Net.HttpStatusCode.NoContent"/> response code, and then issue the command to the player. Due to the asynchronous nature of the issuance of the command, you should use the <see href="https://developer.spotify.com/documentation/web-api/reference/player/get-information-about-the-users-current-playback">Get Information About The User’s Current Playback</see> endpoint to check that your issued command was handled correctly by the player.
+            If the device is not found, the request will return <see cref="F:System.Net.HttpStatusCode.NotFound"/> response code.
+             If the user making the request is non-premium, a <see cref="F:System.Net.HttpStatusCode.Forbidden"/> response code will be returned.
+             </returns>
         </member>
         <member name="M:SpotifyNet.WebAuthorization.GetAuthorizationCode(System.String,System.String,SpotifyNet.Scope,System.Boolean)">
             <summary>

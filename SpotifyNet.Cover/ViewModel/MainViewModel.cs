@@ -170,6 +170,15 @@ namespace SpotifyNet.Cover.ViewModel
             await RefreshSong().ConfigureAwait(false);
         }
 
+        private async void SetVolume(int volume)
+        {
+            var status = await spotify?.GetCurrentPlaybackInfoAsync();
+            if (volume == status.Device.VolumePercent)
+                return;
+
+            await spotify?.SetPlaybackVolume(volume);
+        }
+
         private void ShowMessage(string message)
         {
             Debug.WriteLine(message);
