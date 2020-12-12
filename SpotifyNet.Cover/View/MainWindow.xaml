@@ -77,7 +77,7 @@
             <Custom:EventToCommand Command="{Binding LoadedCommand}"/>
         </i:EventTrigger>
         <i:EventTrigger EventName="MouseWheel">
-            <Custom:EventToCommand Command="{Binding MouseWheelCommand, Delay=1000}" PassEventArgsToCommand="True"/>
+            <Custom:EventToCommand Command="{Binding MouseWheelCommand}" PassEventArgsToCommand="True"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
