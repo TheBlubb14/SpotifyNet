@@ -26,6 +26,22 @@
     </WindowChrome.WindowChrome>
 
     <Window.Resources>
+        <Style x:Key="CoverGrid" TargetType="Grid">
+            <Setter Property="Width" Value="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}" />
+            <Setter Property="Height" Value="{Binding ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}" />
+        </Style>
+
+        <Style x:Key="CoverViewbox" TargetType="Viewbox">
+            <Setter Property="Width" Value="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Grid}}" />
+            <Setter Property="Height" Value="{Binding ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Grid}}" />
+            <Setter Property="Stretch" Value="Fill" />
+            <Setter Property="StretchDirection" Value="Both" />
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="99" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+
         <Style x:Key="CoverIcon" TargetType="materialDesign:PackIcon" BasedOn="{StaticResource {x:Type materialDesign:PackIcon}}">
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -92,44 +108,32 @@
         </Grid.RowDefinitions>
 
         <Image Margin="0" Grid.Column="0" Grid.ColumnSpan="99" Grid.Row="0" Source="{Binding Cover}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding IsPrivateSession, Converter={StaticResource InverseBoolToVisConverter}}"/>
-        
-        <Viewbox StretchDirection="Both" Stretch="Fill"
-                 Margin="0" Grid.Column="0" Grid.ColumnSpan="99" Grid.Row="0"
-                 Height="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Grid}}"
-                 Width="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Grid}}">
+
+        <Viewbox Style="{StaticResource CoverViewbox}">
             <TextBlock  Text="{Binding CurrentVolumeString, NotifyOnTargetUpdated=True}" FontSize="50" TextAlignment="Center" Style="{StaticResource animateFadeOut}"/>
         </Viewbox>
-        
-        <Viewbox StretchDirection="Both" Stretch="Fill"
-                 Visibility="{Binding IsPrivateSession, Converter={StaticResource BooleanToVisibilityConverter}}"
-                 Margin="0" Grid.Column="0" Grid.ColumnSpan="99" Grid.Row="0"
-                 Height="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Grid}}"
-                 Width="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Grid}}">
+
+        <Viewbox Style="{StaticResource CoverViewbox}"
+                 Visibility="{Binding IsPrivateSession, Converter={StaticResource BooleanToVisibilityConverter}}">
             <materialDesign:PackIcon Kind="Incognito" />
         </Viewbox>
 
         <Canvas Grid.Row="0" Grid.Column="0" Background="Transparent" MouseLeftButtonDown="CanvasLeft_MouseLeftButtonDown">
-            <Grid
-                Width="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}"
-                Height="{Binding ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}">
+            <Grid Style="{StaticResource CoverGrid}">
                 <materialDesign:PackIcon Kind="SkipPrevious" Style="{StaticResource CoverIcon}" />
             </Grid>
         </Canvas>
         <Canvas Grid.Row="0" Grid.Column="1" Background="Transparent" MouseLeftButtonDown="CanvasMid_MouseLeftButtonDown">
-            <Grid
-                Width="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}"
-                Height="{Binding ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}">
+            <Grid Style="{StaticResource CoverGrid}">
                 <materialDesign:PackIcon Kind="PlayPause" Style="{StaticResource CoverIcon}" />
             </Grid>
         </Canvas>
-        <Canvas Grid.Row="0" Grid.Column="2" Background="Transparent" MouseLeftButtonDown="CanvasRight_MouseLeftButtonDown" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Grid
-                Width="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}"
-                Height="{Binding ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}">
+        <Canvas Grid.Row="0" Grid.Column="2" Background="Transparent" MouseLeftButtonDown="CanvasRight_MouseLeftButtonDown">
+            <Grid Style="{StaticResource CoverGrid}">
                 <materialDesign:PackIcon Kind="SkipNext" Style="{StaticResource CoverIcon}" />
             </Grid>
         </Canvas>
-        
+
         <ToggleButton Grid.Column="0" Style="{StaticResource CoverToggle}" VerticalAlignment="Bottom" x:Name="TopMostToggle" HorizontalAlignment="Left"/>
     </Grid>
 </Window>
