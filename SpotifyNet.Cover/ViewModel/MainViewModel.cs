@@ -1,6 +1,8 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Newtonsoft.Json;
+using SpotifyNet.Cover.Model;
+using SpotifyNet.Model.Player;
 using SpotifyNet.Model.Tracks;
 using System;
 using System.Diagnostics;
@@ -26,16 +28,33 @@ namespace SpotifyNet.Cover.ViewModel
 
         public ICommand LoadedCommand { get; set; }
 
+        public ICommand MouseWheelCommand { get; set; }
+
         public ICommand StartResumeCommand { get; set; }
 
         public ICommand PreviousCommand { get; set; }
 
         public ICommand NextCommand { get; set; }
 
+        public string CurrentVolumeString { get; set; }
+
         private Spotify spotify;
         private SpotifySecrets spotifySecrets;
         private DispatcherTimer refreshTimer;
+
+        private CurrentPlaybackInfo status;
         private Track currentTrack;
+        private int? currentVolume
+        {
+            get => _currentVolume;
+            set
+            {
+                _currentVolume = value;
+                CurrentVolumeString = value?.ToString() ?? "";
+            }
+        }
+        private int? _currentVolume;
+        private const int VOLUME_STEPS = 10;
 
         bool Designer = false;
 
@@ -49,10 +68,37 @@ namespace SpotifyNet.Cover.ViewModel
             {
                 // Code runs "for real"
                 LoadedCommand = new RelayCommand(Loaded);
+                MouseWheelCommand = new RelayCommand<MouseWheelEventArgs>(MouseWheel);
                 StartResumeCommand = new RelayCommand(StartResume);
                 PreviousCommand = new RelayCommand(Previous);
                 NextCommand = new RelayCommand(Next);
+
+                currentVolume = 10;
             }
+        }
+
+        private async void MouseWheel(MouseWheelEventArgs e)
+        {
+            if (Designer)
+                return;
+
+            await RefreshIfRequired();
+
+            // Return if no volume information
+            if (currentVolume is null)
+                return;
+
+            var targetVolume = currentVolume.Value + ((e.Delta < 0 ? -1 : 1) * VOLUME_STEPS);
+            targetVolume = targetVolume.Clamp(0, 100);
+
+            // Return if same value
+            if (currentVolume == targetVolume)
+                return;
+
+            // Provide visual feedback
+            currentVolume = targetVolume;
+
+            await spotify?.SetPlaybackVolume(targetVolume);
         }
 
         private bool TryLoadSecrets(string fileName)
@@ -114,9 +160,15 @@ namespace SpotifyNet.Cover.ViewModel
             await Refresh().ConfigureAwait(false);
         }
 
-        public async Task Refresh()
+        private async Task RefreshIfRequired()
         {
-            var status = await spotify.GetCurrentPlaybackInfoAsync();
+            if (status is null)
+                await Refresh();
+        }
+
+        private async Task Refresh()
+        {
+            status = await spotify.GetCurrentPlaybackInfoAsync();
 
             // In private session we dont get track informations
             IsPrivateSession = status?.Device?.IsPrivateSession ?? false;
@@ -125,6 +177,7 @@ namespace SpotifyNet.Cover.ViewModel
                 return;
 
             currentTrack = status?.Item;
+            currentVolume = status?.Device?.VolumePercent;
 
             SetCover(currentTrack);
         }
@@ -147,7 +200,7 @@ namespace SpotifyNet.Cover.ViewModel
             if (Designer)
                 return;
 
-            var status = await spotify?.GetCurrentPlaybackInfoAsync();
+            status = await spotify?.GetCurrentPlaybackInfoAsync();
 
             if (status.IsPlaying)
                 await spotify?.PausePlayback();
@@ -173,15 +226,6 @@ namespace SpotifyNet.Cover.ViewModel
 
             await spotify?.SkipPlaybackToNext();
             await Refresh().ConfigureAwait(false);
-        }
-
-        private async void SetVolume(int volume)
-        {
-            var status = await spotify?.GetCurrentPlaybackInfoAsync();
-            if (volume == status.Device.VolumePercent)
-                return;
-
-            await spotify?.SetPlaybackVolume(volume);
         }
 
         private void ShowMessage(string message)
