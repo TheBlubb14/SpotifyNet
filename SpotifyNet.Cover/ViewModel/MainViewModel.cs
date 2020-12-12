@@ -72,8 +72,6 @@ namespace SpotifyNet.Cover.ViewModel
                 StartResumeCommand = new RelayCommand(StartResume);
                 PreviousCommand = new RelayCommand(Previous);
                 NextCommand = new RelayCommand(Next);
-
-                currentVolume = 10;
             }
         }
 
