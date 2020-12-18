@@ -58,6 +58,7 @@ namespace SpotifyNet.Cover.ViewModel
 
         bool Designer = false;
 
+        // TODO: Implement https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow-with-proof-key-for-code-exchange-pkce
         public MainViewModel()
         {
             if (IsInDesignMode)
