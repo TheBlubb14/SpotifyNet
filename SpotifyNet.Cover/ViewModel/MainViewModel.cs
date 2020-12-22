@@ -108,8 +108,8 @@ namespace SpotifyNet.Cover.ViewModel
 
                 if (!File.Exists(fileName))
                 {
-                    if (Debugger.IsAttached)
-                        return false;
+                    //if (Debugger.IsAttached)
+                    //    return false;
 
                     // Create default secret file and notify user about missing secrets 
                     // if the code is running without debugger
@@ -144,7 +144,7 @@ namespace SpotifyNet.Cover.ViewModel
                 return;
             }
 
-            spotify = new Spotify(spotifySecrets.ClientID, spotifySecrets.ClientSecret);
+            spotify = new Spotify(spotifySecrets.ClientID/*, spotifySecrets.ClientSecret*/);
 
             refreshTimer = new DispatcherTimer(DispatcherPriority.Background);
             refreshTimer.Interval = TimeSpan.FromSeconds(5);

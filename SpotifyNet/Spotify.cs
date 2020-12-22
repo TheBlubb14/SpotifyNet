@@ -32,15 +32,25 @@ namespace SpotifyNet
                     // There was no authorization or there was no refresh token provided
                     if (token == default(AccessToken) || token.refresh_token == null)
                     {
-                        var authorizationCode = webAuthorization.GetAuthorizationCode(clientID, RedirectUri, Scope.All);
-                        token = webAuthorization.GetAccessTokenAsync(authorizationCode, RedirectUri, clientID, clientSecret).GetAwaiter().GetResult();
+                        if (pkceAuthorization is null)
+                        {
+                            var authorizationCode = webAuthorization.GetAuthorizationCode(clientID, RedirectUri, Scope.All);
+                            token = webAuthorization.GetAccessTokenAsync(authorizationCode, RedirectUri, clientID, clientSecret).GetAwaiter().GetResult();
+                        }
+                        else
+                        {
+                            var (verifier, challenge) = PKCEUtil.GenerateCodes();
+                            var authorizationCode = pkceAuthorization.GetAuthorizationCode(clientID, RedirectUri, Scope.All, challenge);
+                            token = pkceAuthorization.GetAccessTokenAsync(authorizationCode, RedirectUri, clientID, verifier).GetAwaiter().GetResult();
+                        }
                     }
 
                     AccessToken = token;
                 }
 
                 if (accessToken?.expires_at <= DateTime.Now)
-                    AccessToken = webAuthorization.RefreshAccessTokenAsync(accessToken, clientID, clientSecret).GetAwaiter().GetResult();
+                    AccessToken = webAuthorization.RefreshAccessTokenAsync(accessToken, clientID, clientSecret).GetAwaiter().GetResult() ??
+                        pkceAuthorization.RefreshAccessTokenAsync(accessToken, clientID).GetAwaiter().GetResult();
 
                 return accessToken;
             }
@@ -55,8 +65,9 @@ namespace SpotifyNet
         private static readonly HttpClient httpClient;
 
         private readonly WebAuthorization webAuthorization;
+        private readonly PKCEAuthorization pkceAuthorization;
         private AccessToken accessToken;
-        private readonly string path;
+        private readonly string accessTokenPath;
         private readonly string clientID;
         private readonly string clientSecret;
 
@@ -65,33 +76,42 @@ namespace SpotifyNet
             httpClient = new HttpClient();
         }
 
-        public Spotify(SpotifySecrets spotifySecrets) : this(spotifySecrets.ClientID, spotifySecrets.ClientSecret)
-        {
-
-        }
-
-        public Spotify(string client_id, string client_secret)
+        /// <summary>
+        /// Will use the web authorization to athenticate. Unsecure because client secret will has to be stored.
+        /// </summary>
+        /// <param name="client_id"></param>
+        /// <param name="client_secret"></param>
+        public Spotify(string client_id, string client_secret) : this()
         {
             this.clientID = client_id;
             this.clientSecret = client_secret;
             this.webAuthorization = new WebAuthorization();
+        }
 
-            this.path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpotifyNet");
-            Directory.CreateDirectory(path);
-            this.path = Path.Combine(path, "access_token.json");
+        public Spotify(string client_id) : this()
+        {
+            this.clientID = client_id;
+            this.pkceAuthorization = new PKCEAuthorization();
+        }
+
+        private Spotify()
+        {
+            var appdata = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SpotifyNet");
+            Directory.CreateDirectory(appdata);
+            this.accessTokenPath = Path.Combine(appdata, "access_token.json");
         }
 
         private void SaveAccessToken(AccessToken accessToken)
         {
-            File.WriteAllText(path, JsonConvert.SerializeObject(accessToken));
+            File.WriteAllText(accessTokenPath, JsonConvert.SerializeObject(accessToken));
         }
 
         private AccessToken LoadAccessToken()
         {
-            if (!File.Exists(path))
+            if (!File.Exists(accessTokenPath))
                 return default;
 
-            return JsonConvert.DeserializeObject<AccessToken>(File.ReadAllText(path));
+            return JsonConvert.DeserializeObject<AccessToken>(File.ReadAllText(accessTokenPath));
         }
 
         private void SetAuthorizationHeader(HttpClient httpClient)

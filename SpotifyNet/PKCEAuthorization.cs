@@ -104,6 +104,40 @@ namespace SpotifyNet
                 return result;
             }
         }
+        /// <summary>
+        /// 3. RefreshAccessToken
+        /// </summary>
+        /// <param name="accessToken">Access Token</param>
+        /// <param name="client_id">Client ID</param>
+        /// <returns><see cref="AccessToken"/></returns>
+        public async Task<AccessToken> RefreshAccessTokenAsync(AccessToken accessToken, string client_id)
+        {
+            var url = $"{accounts_base_url}/api/token";
+
+            var content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("grant_type", "refresh_token"),
+                new KeyValuePair<string, string>("refresh_token", accessToken.refresh_token),
+                new KeyValuePair<string, string>("client_id", client_id),
+            });
+
+            using (var response = await httpClient.PostAsync(url, content).ConfigureAwait(false))
+            {
+                var responseMessage = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (response.IsSuccessStatusCode)
+                {
+                    accessToken = JsonConvert.DeserializeObject<AccessToken>(responseMessage);
+
+                    CalculateExpiration(ref accessToken);
+                }
+                else
+                {
+                    throw new Exception(responseMessage);
+                }
+
+                return accessToken;
+            }
+        }
 
         private void CalculateExpiration(ref AccessToken accessToken)
         {
