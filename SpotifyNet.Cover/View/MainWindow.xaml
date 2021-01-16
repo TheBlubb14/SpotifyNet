@@ -8,6 +8,7 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:Custom="http://www.galasoft.ch/mvvmlight"
         xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        xmlns:model="clr-namespace:SpotifyNet.Cover.Model"
         xmlns:local="clr-namespace:SpotifyNet.Cover"
         mc:Ignorable="d"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -26,6 +27,8 @@
     </WindowChrome.WindowChrome>
 
     <Window.Resources>
+        <model:MultiBoolConverter x:Key="MultiBool" Operation="Or"/>
+
         <Style x:Key="CoverGrid" TargetType="Grid">
             <Setter Property="Width" Value="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}" />
             <Setter Property="Height" Value="{Binding ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=Canvas}}" />
@@ -107,7 +110,17 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Image Margin="0" Grid.Column="0" Grid.ColumnSpan="99" Grid.Row="0" Source="{Binding Cover}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding IsPrivateSession, Converter={StaticResource InverseBoolToVisConverter}}"/>
+        <Image Margin="0" Grid.Column="0" Grid.ColumnSpan="99" Grid.Row="0" Source="{Binding Cover}"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch"
+               Visibility="{Binding RelativeSource={RelativeSource Self}, Path=Tag, Converter={StaticResource InverseBoolToVisConverter}}">
+            <Image.Tag>
+                <MultiBinding Converter="{StaticResource MultiBool}">
+                    <Binding Path="IsPrivateSession" />
+                    <Binding Path="IsOffline" />
+                </MultiBinding>
+            </Image.Tag>
+        </Image>
 
         <Viewbox Style="{StaticResource CoverViewbox}">
             <TextBlock  Text="{Binding CurrentVolumeString, NotifyOnTargetUpdated=True}" FontSize="50" TextAlignment="Center" Style="{StaticResource animateFadeOut}"/>
@@ -116,6 +129,11 @@
         <Viewbox Style="{StaticResource CoverViewbox}"
                  Visibility="{Binding IsPrivateSession, Converter={StaticResource BooleanToVisibilityConverter}}">
             <materialDesign:PackIcon Kind="Incognito" />
+        </Viewbox>
+
+        <Viewbox Style="{StaticResource CoverViewbox}"
+                 Visibility="{Binding IsOffline, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <materialDesign:PackIcon Kind="WifiOff" />
         </Viewbox>
 
         <Canvas Grid.Row="0" Grid.Column="0" Background="Transparent" MouseLeftButtonDown="CanvasLeft_MouseLeftButtonDown">

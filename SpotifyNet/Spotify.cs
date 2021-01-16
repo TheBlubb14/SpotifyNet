@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -19,7 +18,7 @@ namespace SpotifyNet
     public sealed class Spotify : IDisposable
     {
         public const string api_base_url = "https://api.spotify.com/v1";
-        public const string RedirectUri = "http://localhost:8000/";
+        public const string RedirectUri = "http://localhost:9111/";
 
         internal AccessToken AccessToken
         {
@@ -32,16 +31,18 @@ namespace SpotifyNet
                     // There was no authorization or there was no refresh token provided
                     if (token == default(AccessToken) || token.refresh_token == null)
                     {
-                        if (pkceAuthorization is null)
+                        switch (AuthorizationType)
                         {
-                            var authorizationCode = webAuthorization.GetAuthorizationCode(clientID, RedirectUri, Scope.All);
-                            token = webAuthorization.GetAccessTokenAsync(authorizationCode, RedirectUri, clientID, clientSecret).GetAwaiter().GetResult();
-                        }
-                        else
-                        {
-                            var (verifier, challenge) = PKCEUtil.GenerateCodes();
-                            var authorizationCode = pkceAuthorization.GetAuthorizationCode(clientID, RedirectUri, Scope.All, challenge);
-                            token = pkceAuthorization.GetAccessTokenAsync(authorizationCode, RedirectUri, clientID, verifier).GetAwaiter().GetResult();
+                            case AuthorizationType.Web:
+                                var authorizationCode = webAuthorization.GetAuthorizationCode(clientID, RedirectUri, Scope.All);
+                                token = webAuthorization.GetAccessTokenAsync(authorizationCode, RedirectUri, clientID, clientSecret).GetAwaiter().GetResult();
+                                break;
+
+                            case AuthorizationType.PKCE:
+                                var (verifier, challenge) = PKCEUtil.GenerateCodes();
+                                authorizationCode = pkceAuthorization.GetAuthorizationCode(clientID, RedirectUri, Scope.All, challenge);
+                                token = pkceAuthorization.GetAccessTokenAsync(authorizationCode, RedirectUri, clientID, verifier).GetAwaiter().GetResult();
+                                break;
                         }
                     }
 
@@ -49,8 +50,18 @@ namespace SpotifyNet
                 }
 
                 if (accessToken?.expires_at <= DateTime.Now)
-                    AccessToken = webAuthorization.RefreshAccessTokenAsync(accessToken, clientID, clientSecret).GetAwaiter().GetResult() ??
-                        pkceAuthorization.RefreshAccessTokenAsync(accessToken, clientID).GetAwaiter().GetResult();
+                {
+                    switch (AuthorizationType)
+                    {
+                        case AuthorizationType.Web:
+                            AccessToken = webAuthorization.RefreshAccessTokenAsync(accessToken, clientID, clientSecret).GetAwaiter().GetResult();
+                            break;
+
+                        case AuthorizationType.PKCE:
+                            AccessToken = pkceAuthorization.RefreshAccessTokenAsync(accessToken, clientID).GetAwaiter().GetResult();
+                            break;
+                    }
+                }
 
                 return accessToken;
             }
@@ -61,6 +72,8 @@ namespace SpotifyNet
                 SaveAccessToken(accessToken);
             }
         }
+
+        public AuthorizationType AuthorizationType { get; }
 
         private static readonly HttpClient httpClient;
 
@@ -85,12 +98,14 @@ namespace SpotifyNet
         {
             this.clientID = client_id;
             this.clientSecret = client_secret;
+            AuthorizationType = AuthorizationType.Web;
             this.webAuthorization = new WebAuthorization();
         }
 
         public Spotify(string client_id) : this()
         {
             this.clientID = client_id;
+            AuthorizationType = AuthorizationType.PKCE;
             this.pkceAuthorization = new PKCEAuthorization();
         }
 

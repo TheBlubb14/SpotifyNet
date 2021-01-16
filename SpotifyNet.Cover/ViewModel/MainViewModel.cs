@@ -26,6 +26,8 @@ namespace SpotifyNet.Cover.ViewModel
 
         public bool IsPrivateSession { get; set; }
 
+        public bool IsOffline { get; set; }
+
         public ICommand LoadedCommand { get; set; }
 
         public ICommand MouseWheelCommand { get; set; }
@@ -73,7 +75,13 @@ namespace SpotifyNet.Cover.ViewModel
                 StartResumeCommand = new RelayCommand(StartResume);
                 PreviousCommand = new RelayCommand(Previous);
                 NextCommand = new RelayCommand(Next);
+                Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             }
+        }
+
+        private void Current_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show(e.Exception.ToString(), e.Exception.Message);
         }
 
         private async void MouseWheel(MouseWheelEventArgs e)
@@ -169,6 +177,10 @@ namespace SpotifyNet.Cover.ViewModel
         {
             status = await spotify.GetCurrentPlaybackInfoAsync();
 
+            IsOffline = status is null;
+            if (IsOffline)
+                return;
+
             // In private session we dont get track informations
             IsPrivateSession = status?.Device?.IsPrivateSession ?? false;
 
@@ -200,6 +212,13 @@ namespace SpotifyNet.Cover.ViewModel
                 return;
 
             status = await spotify?.GetCurrentPlaybackInfoAsync();
+            IsOffline = status is null;
+
+            if (IsOffline)
+            {
+                MessageBox.Show("Maybe you don't have Spotify running?", "Could not get playback info.");
+                return;
+            }
 
             if (status.IsPlaying)
                 await spotify?.PausePlayback();
