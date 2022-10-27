@@ -5,10 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        xmlns:Custom="http://www.galasoft.ch/mvvmlight"
-        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        xmlns:behavior="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:model="clr-namespace:SpotifyNet.Cover.Model"
+        xmlns:vm="clr-namespace:SpotifyNet.Cover.ViewModel"
         xmlns:local="clr-namespace:SpotifyNet.Cover"
         mc:Ignorable="d"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -18,7 +17,7 @@
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
+        d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
         MouseDown="Window_MouseDown"
         Height="640" Width="640" WindowStyle="None" BorderBrush="Black" BorderThickness="1" Topmost="{Binding IsChecked,ElementName=TopMostToggle}">
 
@@ -91,14 +90,14 @@
         </Style>
     </Window.Resources>
 
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <Custom:EventToCommand Command="{Binding LoadedCommand}"/>
-        </i:EventTrigger>
-        <i:EventTrigger EventName="MouseWheel">
-            <Custom:EventToCommand Command="{Binding MouseWheelCommand}" PassEventArgsToCommand="True"/>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
+    <behavior:Interaction.Triggers>
+        <behavior:EventTrigger EventName="Loaded">
+            <behavior:InvokeCommandAction Command="{Binding LoadedCommand}"/>
+        </behavior:EventTrigger>
+        <behavior:EventTrigger EventName="MouseWheel">
+            <behavior:InvokeCommandAction Command="{Binding MouseWheelCommand}" PassEventArgsToCommand="True"/>
+        </behavior:EventTrigger>
+    </behavior:Interaction.Triggers>
 
     <Grid Margin="0">
         <Grid.ColumnDefinitions>

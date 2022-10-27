@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+﻿using Microsoft.Extensions.DependencyInjection;
 using SpotifyNet.Cover.Model.Interop;
 using SpotifyNet.Cover.ViewModel;
 using System;
@@ -20,6 +20,8 @@ namespace SpotifyNet.Cover.View
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = App.Current.Services.GetService<MainViewModel>();
+
             this.SourceInitialized += MainWindow_SourceInitialized;
             mainViewModel.PropertyChanged += MainWindow_PropertyChanged;
         }

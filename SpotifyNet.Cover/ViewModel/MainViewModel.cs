@@ -1,5 +1,5 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using SpotifyNet.Cover.Model;
 using SpotifyNet.Model.Player;
@@ -16,29 +16,14 @@ using System.Windows.Threading;
 
 namespace SpotifyNet.Cover.ViewModel
 {
-    public class MainViewModel : ViewModelBase
+    public partial class MainViewModel : ObservableRecipient
     {
-        public int CoverWidth { get; set; }
-
-        public int CoverHeight { get; set; }
-
-        public BitmapImage Cover { get; set; }
-
-        public bool IsPrivateSession { get; set; }
-
-        public bool IsOffline { get; set; }
-
-        public ICommand LoadedCommand { get; set; }
-
-        public ICommand MouseWheelCommand { get; set; }
-
-        public ICommand StartResumeCommand { get; set; }
-
-        public ICommand PreviousCommand { get; set; }
-
-        public ICommand NextCommand { get; set; }
-
-        public string CurrentVolumeString { get; set; }
+        [ObservableProperty] private int coverWidth;
+        [ObservableProperty] private int coverHeight;
+        [ObservableProperty] private BitmapImage cover;
+        [ObservableProperty] private bool isPrivateSession;
+        [ObservableProperty] private bool isOffline;
+        [ObservableProperty] private string currentVolumeString;
 
         private Spotify spotify;
         private SpotifySecrets spotifySecrets;
@@ -63,20 +48,7 @@ namespace SpotifyNet.Cover.ViewModel
         // TODO: Implement https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow-with-proof-key-for-code-exchange-pkce
         public MainViewModel()
         {
-            if (IsInDesignMode)
-            {
-                // Code runs in Blend --> create design time data.
-            }
-            else
-            {
-                // Code runs "for real"
-                LoadedCommand = new RelayCommand(Loaded);
-                MouseWheelCommand = new RelayCommand<MouseWheelEventArgs>(MouseWheel);
-                StartResumeCommand = new RelayCommand(StartResume);
-                PreviousCommand = new RelayCommand(Previous);
-                NextCommand = new RelayCommand(Next);
-                Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
-            }
+            Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
         }
 
         private void Current_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -84,6 +56,7 @@ namespace SpotifyNet.Cover.ViewModel
             MessageBox.Show(e.Exception.ToString(), e.Exception.Message);
         }
 
+        [RelayCommand]
         private async void MouseWheel(MouseWheelEventArgs e)
         {
             if (Designer)
@@ -141,6 +114,7 @@ namespace SpotifyNet.Cover.ViewModel
             }
         }
 
+        [RelayCommand]
         public async void Loaded()
         {
             if (Designer)
@@ -206,6 +180,7 @@ namespace SpotifyNet.Cover.ViewModel
             Cover = new BitmapImage(new Uri(cover.Url));
         }
 
+        [RelayCommand]
         private async void StartResume()
         {
             if (Designer)
@@ -228,6 +203,7 @@ namespace SpotifyNet.Cover.ViewModel
             SetCover(status.Item);
         }
 
+        [RelayCommand]
         private async void Previous()
         {
             if (Designer)
@@ -237,6 +213,7 @@ namespace SpotifyNet.Cover.ViewModel
             await Refresh().ConfigureAwait(false);
         }
 
+        [RelayCommand]
         private async void Next()
         {
             if (Designer)

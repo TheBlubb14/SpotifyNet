@@ -5,13 +5,13 @@ using System.Windows.Data;
 
 namespace SpotifyNet.Cover.Model
 {
-    internal enum Operation
+    public enum Operation
     {
         And,
         Or
     }
 
-    internal class MultiBoolConverter : IMultiValueConverter
+    public class MultiBoolConverter : IMultiValueConverter
     {
         public Operation Operation { get; set; }
 
