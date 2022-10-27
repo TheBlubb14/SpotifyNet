@@ -112,7 +112,7 @@ namespace SpotifyNet.Cover.View
             if (e.ClickCount < 2)
                 return;
 
-            mainViewModel.PreviousCommand.Execute(e);
+            mainViewModel.NextCommand.Execute(e);
         }
     }
 }
